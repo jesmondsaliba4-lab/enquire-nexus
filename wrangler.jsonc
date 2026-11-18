@@ -40,8 +40,8 @@
     // Until ACCESS_TEAM_DOMAIN and ACCESS_AUD are filled in, the desk refuses everyone.
     "DESK_HOST": "release.tpnintel.com",
     "DESK_EMAIL": "jes@thinkpeople.eu",
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    "ACCESS_TEAM_DOMAIN": "leadership-thinkpeople.cloudflareaccess.com",
+    "ACCESS_AUD": "382d1dcd7fd741f70dab663e8a73a63bdc47b3b51d7bea905e4b1c32db62cd54"
   }
   // Secret, set in the Cloudflare dashboard: ANTHROPIC_API_KEY
 }
