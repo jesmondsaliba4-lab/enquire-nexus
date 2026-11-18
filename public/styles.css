@@ -41,16 +41,13 @@ h1{margin:0 0 16px;font-family:'EB Garamond',serif;font-weight:500;font-size:44p
 .searching{margin:12px 0 0;font-size:13px;color:var(--soft)}
 .searching strong{color:var(--ink);font-weight:600}
 
-.pin{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;border:1.5px solid var(--blue);background:var(--navy);color:var(--blue);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 0 0 4px rgba(10,18,38,.55),0 0 18px rgba(92,200,236,.35);transition:background .2s,box-shadow .2s}
+.pin{position:absolute;transform:translate(-50%,-50%);width:clamp(26px,3.75vw,54px);height:clamp(26px,3.75vw,54px);border-radius:50%;border:1.5px solid var(--blue);background:var(--navy);color:var(--blue);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 0 0 4px rgba(10,18,38,.55),0 0 18px rgba(92,200,236,.35);transition:background .2s,box-shadow .2s}
 .pin:hover{background:#17244a}
 .pin[aria-pressed="true"]{background:var(--blue);color:var(--navy);border-color:var(--ink);box-shadow:0 0 0 6px rgba(92,200,236,.3),0 0 32px rgba(92,200,236,.75)}
-.pin svg{width:24px;height:24px}
-.pin-label{position:absolute;top:62px;left:50%;transform:translateX(-50%);white-space:nowrap;font:600 11px/1 'Hanken Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;background:rgba(10,18,38,.86);color:var(--ink);padding:5px 9px;border-radius:999px;pointer-events:none}
-/* the Enquire emblem stands where the paths converge: the "All of Enquire" choice */
-.light{position:absolute;left:69.8%;top:31%;transform:translate(-50%,-50%);width:10.5%;aspect-ratio:1;border-radius:50%;border:0;background:transparent;cursor:pointer;padding:0;transition:transform .25s}
-.light img{display:block;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 2px rgba(200,146,68,.85),0 0 34px rgba(255,190,90,.55),0 0 80px rgba(255,170,60,.35)}
-.light:hover{transform:translate(-50%,-50%) scale(1.04)}
-.light[aria-pressed="true"] img{box-shadow:0 0 0 3px var(--blue),0 0 36px rgba(92,200,236,.7),0 0 90px rgba(255,170,60,.35)}
+.pin svg{width:46%;height:46%}
+.pin-label{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font:600 11px/1 'Hanken Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;background:rgba(10,18,38,.86);color:var(--ink);padding:5px 9px;border-radius:999px;pointer-events:none}
+.light{position:absolute;left:69.8%;top:34%;transform:translate(-50%,-50%);width:8.2%;aspect-ratio:1;border-radius:50%;border:1.5px dashed transparent;background:transparent;cursor:pointer;padding:0}
+.light:hover,.light[aria-pressed="true"]{border-color:rgba(239,231,212,.75)}
 
 .chips{display:none;flex-wrap:wrap;gap:8px;padding:20px 24px 0}
 .chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(239,231,212,.35);background:transparent;color:var(--ink);font:500 14px 'Hanken Grotesk',sans-serif;cursor:pointer}
@@ -121,5 +118,5 @@ h1{margin:0 0 16px;font-family:'EB Garamond',serif;font-weight:500;font-size:44p
 .foot-brand span{font-family:'EB Garamond',serif;font-weight:600;font-size:18px;color:var(--ink)}
 
 @media (max-width:1180px){.copy{position:static;width:auto;max-width:none;padding:36px 24px 8px}}
-@media (max-width:820px){.how-grid{grid-template-columns:1fr}.pin,.light{display:none}.chips{display:flex}.top{position:static;background:var(--navy)}}
+@media (max-width:820px){.how-grid{grid-template-columns:1fr}.pin-label{display:none}.pin{box-shadow:0 0 0 2px rgba(10,18,38,.55),0 0 10px rgba(92,200,236,.35)}.chips{display:flex}.top{position:static;background:var(--navy)}}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
