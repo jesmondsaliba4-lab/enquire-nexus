@@ -50,6 +50,14 @@ h1{margin:0 0 16px;font-family:'EB Garamond',serif;font-weight:500;font-size:44p
 .light{position:absolute;left:69.8%;top:34%;transform:translate(-50%,-50%);width:8.2%;aspect-ratio:1;border-radius:50%;border:1.5px dashed transparent;background:transparent;cursor:pointer;padding:0}
 .light:hover,.light[aria-pressed="true"]{border-color:rgba(239,231,212,.75)}
 
+.tip{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - clamp(20px,2.4vw,36px)));width:max-content;max-width:250px;padding:10px 13px;border-radius:8px;background:rgba(10,18,38,.96);border:1px solid rgba(92,200,236,.55);box-shadow:0 8px 28px rgba(0,0,0,.45);pointer-events:none;display:flex;flex-direction:column;gap:3px}
+.tip[data-edge="right"]{transform:translate(-88%,calc(-100% - clamp(20px,2.4vw,36px)))}
+.tip[data-edge="left"]{transform:translate(-12%,calc(-100% - clamp(20px,2.4vw,36px)))}
+.tip[data-big="1"]{transform:translate(-50%,calc(-100% - 5vw))}
+.tip strong{font-family:'EB Garamond',serif;font-weight:600;font-size:18px;line-height:1.15;color:var(--ink)}
+.tip-desc{font-size:13px;line-height:1.4;color:rgba(239,231,212,.86)}
+.tip-dom{font-size:12px;font-weight:600;color:var(--blue)}
+@media (hover:none){.tip{display:none}}
 .chips{display:none;flex-wrap:wrap;gap:8px;padding:20px 24px 0}
 .chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(239,231,212,.35);background:transparent;color:var(--ink);font:500 14px 'Hanken Grotesk',sans-serif;cursor:pointer}
 .chip svg{width:18px;height:18px}

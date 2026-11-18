@@ -5,21 +5,21 @@
   var ICONS = __ICONS__;
 
   var EDITIONS = [
-    { key: "all", name: "All of Enquire", domain: "enquire.nexus", desc: "Every public edition at once. Members also see the signed-in rooms.",
+    { key: "all", short: "Ask across every edition at once", name: "All of Enquire", domain: "enquire.nexus", desc: "Every public edition at once. Members also see the signed-in rooms.",
       sources: ["News", "Malta Observer", "ThinkPeople Nexus", "SHaiPING Malta", "Leonardo 2050", "Wellbeing", "Members’ rooms, after sign-in"] },
-    { key: "news", name: "News", domain: "enquire.news", x: 22.3, y: 73, desc: "Reporting from Malta, Europe and the world, with the corporate desk and Meridian’s news monitoring.",
+    { key: "news", short: "Malta, Europe and the world in the news", name: "News", domain: "enquire.news", x: 22.3, y: 73, desc: "Reporting from Malta, Europe and the world, with the corporate desk and Meridian’s news monitoring.",
       sources: ["cde.news", "The Corporate Times", "Meridian news", "TPN evidence engine"] },
-    { key: "observer", name: "Malta Observer", domain: "enquire.observer", x: 35.3, y: 56, desc: "Malta’s economy, skills, resilience and standing, read through official statistics and the Observer’s reports.",
+    { key: "observer", short: "Malta’s economy and outlook, in official figures and reports", name: "Malta Observer", domain: "enquire.observer", x: 35.3, y: 56, desc: "Malta’s economy, skills, resilience and standing, read through official statistics and the Observer’s reports.",
       sources: ["Malta Observer", "NSO Malta official statistics", "Malta news monitoring"] },
-    { key: "thinkpeople", name: "ThinkPeople Nexus", domain: "enquire.thinkpeople.io", x: 45.6, y: 48, desc: "How the Nexus works, its published services, and the path for organisations getting ready for AI.",
+    { key: "thinkpeople", short: "The Nexus, its services and its practice", name: "ThinkPeople Nexus", domain: "enquire.thinkpeople.io", x: 45.6, y: 48, desc: "How the Nexus works, its published services, and the path for organisations getting ready for AI.",
       sources: ["ThinkPeople Nexus", "Challenge Navigation", "Responsible Intelligence", "People Capability", "HUMaiNE Stewardship"] },
-    { key: "shaiping", name: "SHaiPING Malta", domain: "enquire.shaipingmalta.eu", x: 51, y: 70.5, desc: "SHaiPING Malta’s purpose, evidence and method.",
+    { key: "shaiping", short: "SHaiPING Malta: purpose, evidence and method", name: "SHaiPING Malta", domain: "enquire.shaipingmalta.eu", x: 51, y: 70.5, desc: "SHaiPING Malta’s purpose, evidence and method.",
       sources: ["SHaiPING Malta purpose", "Evidence and method", "People Future Readiness Index (to follow)"] },
-    { key: "leonardo", name: "Leonardo 2050", domain: "enquire.leonardo2050.com", x: 62.8, y: 47.6, desc: "The philosophy behind the Nexus: human wisdom and artificial intelligence, and why 2050.",
+    { key: "leonardo", short: "The philosophy of the Nexus: human wisdom and AI", name: "Leonardo 2050", domain: "enquire.leonardo2050.com", x: 62.8, y: 47.6, desc: "The philosophy behind the Nexus: human wisdom and artificial intelligence, and why 2050.",
       sources: ["Leonardo 2050", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
-    { key: "wellbeing", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "Wellbeing in Malta through the published, approved WBGI snapshots. Connection to follow.",
+    { key: "wellbeing", short: "Wellbeing in Malta through the WBGI (to follow)", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "Wellbeing in Malta through the published, approved WBGI snapshots. Connection to follow.",
       sources: ["WBGI published snapshots (to follow)"] },
-    { key: "rooms", name: "Members’ rooms", domain: "enquire.nexus", x: 91.6, y: 56, locked: true, desc: "The private rooms for members: analysis, deep research and working data. Sign-in required.",
+    { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "enquire.nexus", x: 91.6, y: 56, locked: true, desc: "The private rooms for members: analysis, deep research and working data. Sign-in required.",
       sources: ["Meridian analysis", "Dispatch PRO", "Malta Skills Workbench rooms", "WBGI observatory", "SHaiPING workspaces"] }
   ];
 
@@ -60,6 +60,33 @@
       c.appendChild(document.createTextNode(e.name));
       chips.appendChild(c);
     });
+    // the description card for pins and the lighthouse
+    var tip = el("div", { "class": "tip", role: "tooltip", id: "map-tip", hidden: "" });
+    var map = document.querySelector(".map");
+    map.appendChild(tip);
+    function showTip(target) {
+      var e = byKey[target.getAttribute("data-pick")];
+      if (!e) return;
+      tip.textContent = "";
+      tip.appendChild(el("strong", { text: e.name }));
+      tip.appendChild(el("span", { "class": "tip-desc", text: e.short }));
+      tip.appendChild(el("span", { "class": "tip-dom", text: e.locked ? "Sign-in required" : e.domain }));
+      var x = e.key === "all" ? 69.8 : e.x, y = e.key === "all" ? 34 : e.y;
+      tip.style.left = x + "%"; tip.style.top = y + "%";
+      tip.setAttribute("data-edge", x > 78 ? "right" : x < 22 ? "left" : "mid");
+      tip.setAttribute("data-big", e.key === "all" ? "1" : "0");
+      tip.hidden = false;
+      target.setAttribute("aria-describedby", "map-tip");
+    }
+    function hideTip(target) { tip.hidden = true; if (target) target.removeAttribute("aria-describedby"); }
+    map.querySelectorAll(".pin, .light").forEach(function (b) {
+      b.addEventListener("mouseenter", function () { showTip(b); });
+      b.addEventListener("mouseleave", function () { hideTip(b); });
+      b.addEventListener("focus", function () { showTip(b); });
+      b.addEventListener("blur", function () { hideTip(b); });
+    });
+    document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") hideTip(); });
+
     document.addEventListener("click", function (ev) {
       var t = ev.target.closest("[data-pick]");
       if (t) { pick(t.getAttribute("data-pick")); }
