@@ -27,6 +27,9 @@
   ],
 
   // every day at 04:41 Malta time: re-read the published pages
+  // Email to the desk when a research request arrives. Cloudflare only delivers to this verified address.
+  "send_email": [{ "name": "MAILER", "destination_address": "jes@thinkpeople.eu" }],
+
   "triggers": { "crons": ["41 3 * * *"] },
 
   // At most 12 fresh enquiries a minute from one visitor (answers already cached do not count).
@@ -40,6 +43,7 @@
     // Until ACCESS_TEAM_DOMAIN and ACCESS_AUD are filled in, the desk refuses everyone.
     "DESK_HOST": "release.tpnintel.com",
     "DESK_EMAIL": "jes@thinkpeople.eu",
+    "MAIL_FROM": "desk@enquire.nexus",
     "ACCESS_TEAM_DOMAIN": "leadership-thinkpeople.cloudflareaccess.com,super-wind-5ed2.cloudflareaccess.com",
     "ACCESS_AUD": "382d1dcd7fd741f70dab663e8a73a63bdc47b3b51d7bea905e4b1c32db62cd54"
   }

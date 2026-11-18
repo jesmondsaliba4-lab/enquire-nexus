@@ -12,10 +12,11 @@ import { ADAPTERS } from "./sources";
 import { crawlStatus, refreshStale } from "./pages";
 import { handleDesk } from "./desk";
 import { REQUEST_SOURCES, saveResearchRequest } from "./research";
+import { notifyDesk } from "./notify";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.4.4";
+const VERSION = "0.4.5";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;
@@ -147,6 +148,7 @@ export default {
       if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
       if (origin && origin !== url.origin && !site) return json({ error: "forbidden" }, 403);
       const r = await saveResearchRequest(request, env, site);
+      if (r.saved) ctx.waitUntil(notifyDesk(env, r.saved));
       const res = json(r.body, r.status);
       for (const [k, v] of Object.entries(cors)) res.headers.set(k, v);
       return res;

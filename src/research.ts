@@ -1,10 +1,11 @@
 // "Request further research": a visitor asks ThinkPeople Nexus to go further than an answer.
 // One channel for every site: Enquire's own editions, and the ThinkPeople sites that pass their
 // readers' requests on (cde.news, Corporate Times, ...). Kept in Enquire's database (EU) and shown,
-// labelled by site, on the release desk.
+// labelled by site, on the release desk, and emailed to the desk (src/notify.ts).
 
 import type { Env } from "./types";
 import { clip } from "./text";
+import type { SavedRequest } from "./notify";
 
 const EMAIL = /^[^\s@<>()]{1,64}@[^\s@<>()]{1,190}\.[a-z]{2,24}$/i;
 
@@ -27,7 +28,7 @@ const SOURCE_NAMES = new Set(Object.values(REQUEST_SOURCES));
  * @param fromOrigin the site label when the request came from a listed site's page (decided by the caller
  *                   from the Origin header); null for Enquire's own pages or a server-to-server call.
  */
-export async function saveResearchRequest(request: Request, env: Env, fromOrigin: string | null = null): Promise<{ status: number; body: Record<string, unknown> }> {
+export async function saveResearchRequest(request: Request, env: Env, fromOrigin: string | null = null): Promise<{ status: number; body: Record<string, unknown>; saved?: SavedRequest }> {
   if (!env.ENQUIRE_DB) return { status: 503, body: { error: "Requests cannot be received just now." } };
   let j: Record<string, unknown>;
   try {
@@ -56,10 +57,14 @@ export async function saveResearchRequest(request: Request, env: Env, fromOrigin
     const { success } = await env.ENQUIRE_LIMIT.limit({ key: `research:${ip}` });
     if (!success) return { status: 429, body: { error: "Please wait a minute before sending another request." } };
   }
+  const saved: SavedRequest = {
+    id: crypto.randomUUID(), created_at: new Date().toISOString(), source,
+    q: clip(j.q, 300), edition: clip(j.edition, 40), message: clip(fullMessage, 2600), name, email, organisation: clip(j.organisation, 160),
+  };
   await env.ENQUIRE_DB.prepare(
     `INSERT INTO research_requests (id, created_at, q, edition, message, name, email, organisation, status, source)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`)
-    .bind(crypto.randomUUID(), new Date().toISOString(), clip(j.q, 300), clip(j.edition, 40), clip(fullMessage, 2600), name, email, clip(j.organisation, 160), source)
+    .bind(saved.id, saved.created_at, saved.q, saved.edition, saved.message, name, email, saved.organisation, source)
     .run();
-  return { status: 200, body: { ok: true } };
+  return { status: 200, body: { ok: true }, saved };
 }

@@ -14,6 +14,8 @@ export interface Env {
   DESK_EMAIL?: string;           // the one account allowed on the release desk
   ACCESS_TEAM_DOMAIN?: string;   // <team>.cloudflareaccess.com
   ACCESS_AUD?: string;           // the Access application's audience tag
+  MAILER?: SendEmail;            // Cloudflare Email Routing: can only send to the verified desk address
+  MAIL_FROM?: string;            // desk@enquire.nexus
 }
 
 export interface RateLimit {
