@@ -27,6 +27,7 @@ a{color:var(--gold)} a:hover{color:var(--gold-hi)}
 
 /* hero and map */
 .hero{position:relative;overflow:hidden}
+.map{position:relative}
 .hero-bg{display:block;width:100%;height:auto}
 .copy{position:absolute;z-index:2;left:4.5%;top:12.5%;width:36%;max-width:560px}
 .eyebrow{margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
