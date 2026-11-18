@@ -22,21 +22,24 @@ const j = (body: unknown, status = 200) =>
 // ---------------------------------------------------------------- verifying Cloudflare Access
 
 const b64u = (s: string) => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)), (c) => c.charCodeAt(0));
-let certs: { at: number; keys: JsonWebKey[] & { kid?: string }[] } = { at: 0, keys: [] };
+const certs = new Map<string, { at: number; keys: any[] }>();
 
 async function accessKeys(team: string) {
-  if (Date.now() - certs.at < 3600_000 && certs.keys.length) return certs.keys;
+  const c = certs.get(team);
+  if (c && Date.now() - c.at < 3600_000 && c.keys.length) return c.keys;
   const r = await fetch(`https://${team}/cdn-cgi/access/certs`);
   if (!r.ok) throw new Error("certs");
   const body = (await r.json()) as { keys: any[] };
-  certs = { at: Date.now(), keys: body.keys };
-  return certs.keys;
+  certs.set(team, { at: Date.now(), keys: body.keys });
+  return body.keys;
 }
 
-/** The signed-in email if the request carries a valid Access token for the desk, otherwise null. */
+/** The signed-in email if the request carries a valid Access token for the desk, otherwise null.
+ *  ACCESS_TEAM_DOMAIN may list several names of the same Access team, comma separated. */
 export async function deskUser(request: Request, env: Env): Promise<string | null> {
-  const team = env.ACCESS_TEAM_DOMAIN, aud = env.ACCESS_AUD, allowed = (env.DESK_EMAIL || "").toLowerCase();
-  if (!team || !aud || !allowed) return null;
+  const teams = (env.ACCESS_TEAM_DOMAIN || "").split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+  const aud = env.ACCESS_AUD, allowed = (env.DESK_EMAIL || "").toLowerCase();
+  if (!teams.length || !aud || !allowed) return null;
   const cookie = (request.headers.get("cookie") || "").match(/(?:^|;\s*)CF_Authorization=([^;]+)/)?.[1];
   const token = request.headers.get("cf-access-jwt-assertion") || cookie;
   if (!token) return null;
@@ -44,14 +47,17 @@ export async function deskUser(request: Request, env: Env): Promise<string | nul
     const [h, p, s] = token.split(".");
     const header = JSON.parse(new TextDecoder().decode(b64u(h)));
     const payload = JSON.parse(new TextDecoder().decode(b64u(p)));
+    if (header.alg !== "RS256") return null;
+    // the issuer must be one of our team names; its keys are then fetched from that team only
+    const team = teams.find((t) => payload.iss === `https://${t}`);
+    if (!team) return null;
     const jwk = (await accessKeys(team)).find((k: any) => k.kid === header.kid);
-    if (!jwk || header.alg !== "RS256") return null;
+    if (!jwk) return null;
     const key = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
     const ok = await crypto.subtle.verify("RSASSA-PKCS1-v1_5", key, b64u(s), new TextEncoder().encode(`${h}.${p}`));
     if (!ok) return null;
     const auds = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
     if (!auds.includes(aud)) return null;
-    if (payload.iss !== `https://${team}`) return null;
     if (!payload.exp || payload.exp * 1000 < Date.now()) return null;
     const email = String(payload.email || "").toLowerCase();
     return email === allowed ? email : null;
