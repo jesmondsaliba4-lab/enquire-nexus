@@ -15,7 +15,7 @@ import { saveResearchRequest } from "./research";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.4.2";
+const VERSION = "0.4.3";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;

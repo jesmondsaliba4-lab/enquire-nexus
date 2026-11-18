@@ -151,3 +151,8 @@ h1{margin:0 0 16px;font-family:'EB Garamond',serif;font-weight:500;font-size:44p
 .rf-done{color:var(--gold);font-weight:600}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (max-width:720px){.rf-row{grid-template-columns:1fr}}
+
+/* the Enquire picture: human and AI looking at the same evidence */
+.how-art{margin:0 0 18px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#080f22}
+.how-art img{display:block;width:100%;height:auto}
+.how-art figcaption{padding:10px 18px;font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:var(--ink);border-top:1px solid var(--line)}
