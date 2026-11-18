@@ -9,11 +9,11 @@ const SHORT_OK = new Set(["eu", "uk", "us", "un", "ai", "hr", "gdp", "pm", "mp",
 
 /** Distinct, meaningful search words from a question (at most 8). */
 export function searchTerms(query: string): string[] {
-  const words = String(query || "")
-    .toLowerCase()
-    .normalize("NFKC")
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter((w) => w && !STOP.has(w) && (w.length >= 3 || /^\p{N}+$/u.test(w) || SHORT_OK.has(w)));
+  const text = String(query || "").toLowerCase().normalize("NFKC");
+  // keep hyphenated names whole as well ("co-wisdom", "e-commerce")
+  const joined = text.match(/[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+/gu) ?? [];
+  const words = [...joined, ...text.split(/[^\p{L}\p{N}]+/u)]
+    .filter((w) => w && !STOP.has(w) && (w.includes("-") || w.length >= 3 || /^\p{N}+$/u.test(w) || SHORT_OK.has(w)));
   return [...new Set(words)].slice(0, 8);
 }
 
