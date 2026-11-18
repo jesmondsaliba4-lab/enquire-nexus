@@ -23,6 +23,9 @@ Every answer keeps three things apart: what the **sources** say, Enquire's **rea
   - The Corporate Times desk (D1 `ct-corporate-sources`, EU)
   - cde.news (public WordPress search)
   - Malta Observer (public `/api/glance` and `/api/edition`)
+  - ThinkPeople published pages (`src/pages.ts`): the public pages of thinkpeoplenexus.com,
+    thinkpeople.io, leonardo2050.com, shaipingmalta.eu, thinkpeople.you and maltaobserver.com,
+    re-read daily into Enquire's own D1 `enquire-nexus` (EU) and searched with full-text search
 - `src/answer.ts` — the answer, written by Claude from the numbered sources only.
 
 The VO / OCVO registers are never connected. The engine only reads (SELECT / GET).
@@ -35,6 +38,8 @@ The VO / OCVO registers are never connected. The engine only reads (SELECT / GET
 
 ## Releases
 
+- **0.3** — published pages of the ThinkPeople sites, read daily (cron 03:41 UTC) and on demand;
+  the Wellbeing edition answers from ThinkPeople.You; `/api/pages` shows the crawl status.
 - **0.2** — the engine: five approved sources, governed answers, the landing page with the
   edition map, logo and icons. Wellbeing (WBGI) and the members' rooms are marked as to follow.
 - **0.1** — holding page and `/health`.

@@ -7,10 +7,11 @@
 import { writeAnswer } from "./answer";
 import { EDITIONS, editionFor } from "./editions";
 import { ADAPTERS } from "./sources";
+import { crawlStatus, refreshStale } from "./pages";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.2.6";
+const VERSION = "0.3.0";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;
@@ -63,6 +64,9 @@ async function enquire(request: Request, env: Env, ctx: ExecutionContext): Promi
     return json({ ...body, cached: true });
   }
 
+  // keep the published pages fresh: at most one stale site is re-read, after the answer is sent
+  ctx.waitUntil(refreshStale(env, 1));
+
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   if (env.ENQUIRE_LIMIT) {
     const { success } = await env.ENQUIRE_LIMIT.limit({ key: ip });
@@ -111,8 +115,13 @@ export default {
     if (url.pathname === "/health") {
       return json({
         service: "enquire-nexus", version: VERSION, ok: true,
-        sources: { evidence: !!env.EVIDENCE_DB, corporate: !!env.CT_DB, answers: !!env.ANTHROPIC_API_KEY, limit: !!env.ENQUIRE_LIMIT },
+        sources: { evidence: !!env.EVIDENCE_DB, corporate: !!env.CT_DB, pages: !!env.ENQUIRE_DB, answers: !!env.ANTHROPIC_API_KEY, limit: !!env.ENQUIRE_LIMIT },
       });
+    }
+    if (url.pathname === "/api/pages") {
+      // status of the published-page copy; also nudges one stale site to refresh (never more than once a day each)
+      ctx.waitUntil(refreshStale(env, 1));
+      return json({ version: VERSION, sites: await crawlStatus(env) });
     }
     if (url.pathname === "/api/editions") {
       const list = Object.values(EDITIONS).map((e) => ({
@@ -126,5 +135,10 @@ export default {
       return enquire(request, env, ctx);
     }
     return env.ASSETS.fetch(request);
+  },
+
+  // daily: re-read the published pages of the ThinkPeople sites
+  async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(refreshStale(env));
   },
 };

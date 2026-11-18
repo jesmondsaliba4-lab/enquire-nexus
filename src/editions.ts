@@ -13,19 +13,19 @@ export interface Edition {
 
 export const EDITIONS: Record<EditionKey, Edition> = {
   all: { key: "all", name: "All of Enquire", domain: "enquire.nexus",
-    sources: ["thinkpeople-passages", "tpn-evidence", "cde-news", "corporate-times", "malta-observer"] },
+    sources: ["thinkpeople-passages", "site-pages", "tpn-evidence", "cde-news", "corporate-times", "malta-observer"] },
   news: { key: "news", name: "News", domain: "enquire.news",
     sources: ["tpn-evidence", "cde-news", "corporate-times"] },
   observer: { key: "observer", name: "Malta Observer", domain: "enquire.observer",
-    sources: ["malta-observer", "tpn-evidence"] },
+    sources: ["malta-observer", "site-pages", "tpn-evidence"] },
   thinkpeople: { key: "thinkpeople", name: "ThinkPeople Nexus", domain: "enquire.thinkpeople.io",
-    sources: ["thinkpeople-passages"] },
+    sources: ["thinkpeople-passages", "site-pages"] },
   shaiping: { key: "shaiping", name: "SHaiPING Malta", domain: "enquire.shaipingmalta.eu",
-    sources: ["thinkpeople-passages"] },
+    sources: ["thinkpeople-passages", "site-pages"] },
   leonardo: { key: "leonardo", name: "Leonardo 2050", domain: "enquire.leonardo2050.com",
-    sources: ["thinkpeople-passages"] },
-  wellbeing: { key: "wellbeing", name: "Wellbeing", domain: "enquire.thinkpeople.you", sources: [],
-    notYet: "The Wellbeing edition will read the published WBGI snapshots. That connection is not switched on yet, so this path cannot answer today." },
+    sources: ["thinkpeople-passages", "site-pages"] },
+  // reads thinkpeople.you's published pages now; the approved WBGI snapshots follow
+  wellbeing: { key: "wellbeing", name: "Wellbeing", domain: "enquire.thinkpeople.you", sources: ["site-pages"] },
   rooms: { key: "rooms", name: "Members’ rooms", domain: "enquire.nexus", sources: [], members: true,
     notYet: "The members’ rooms open after sign-in. Sign-in is not switched on yet." },
 };

@@ -269,7 +269,10 @@ const observer: SourceAdapter = {
   },
 };
 
+import { sitePages } from "./pages";
+
 export const ADAPTERS: Record<string, SourceAdapter> = {
+  [sitePages.id]: sitePages,
   [passages.id]: passages,
   [evidence.id]: evidence,
   [corporate.id]: corporate,

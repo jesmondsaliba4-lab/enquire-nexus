@@ -4,6 +4,7 @@ export interface Env {
   ASSETS: Fetcher;
   EVIDENCE_DB?: D1Database;      // tpn-evidence (EU): read-only by rule, SELECT only
   CT_DB?: D1Database;            // ct-corporate-sources (EU): read-only by rule, SELECT only
+  ENQUIRE_DB?: D1Database;       // enquire-nexus (EU): Enquire's own copy of the published pages
   ENQUIRE_LIMIT?: RateLimit;     // per-visitor limit
   ANTHROPIC_API_KEY?: string;
   ANTHROPIC_WORKSPACE_ID?: string;
@@ -28,7 +29,7 @@ export interface Doc {
   date: string;          // ISO date or a readable period
   url: string;           // where a reader can check it ("" when the source has no public link)
   via: string;           // publisher or document name, shown to the reader
-  kind: "news" | "passage" | "figure" | "filing" | "analysis";
+  kind: "news" | "passage" | "page" | "figure" | "filing" | "analysis";
   status?: string;       // governance status for passages (e.g. "Editorial working draft")
   score?: number;
 }

@@ -10,15 +10,15 @@
     { key: "news", short: "Malta, Europe and the world in the news", name: "News", domain: "enquire.news", x: 22.3, y: 73, desc: "Reporting from Malta, Europe and the world, with the corporate desk and Meridian’s news monitoring.",
       sources: ["cde.news", "The Corporate Times", "Meridian news", "TPN evidence engine"] },
     { key: "observer", short: "Malta’s economy and outlook, in official figures and reports", name: "Malta Observer", domain: "enquire.observer", x: 35.3, y: 56, desc: "Malta’s economy, skills, resilience and standing, read through official statistics and the Observer’s reports.",
-      sources: ["Malta Observer", "NSO Malta official statistics", "Malta news monitoring"] },
+      sources: ["Malta Observer figures and reports", "NSO Malta official statistics", "Malta Skills Observatory", "Malta news monitoring"] },
     { key: "thinkpeople", short: "The Nexus, its services and its practice", name: "ThinkPeople Nexus", domain: "enquire.thinkpeople.io", x: 45.6, y: 48, desc: "How the Nexus works, its published services, and the path for organisations getting ready for AI.",
-      sources: ["ThinkPeople Nexus", "Challenge Navigation", "Responsible Intelligence", "People Capability", "HUMaiNE Stewardship"] },
+      sources: ["ThinkPeople Nexus", "thinkpeople.io", "Challenge Navigation", "Responsible Intelligence", "People Capability", "HUMaiNE Stewardship"] },
     { key: "shaiping", short: "SHaiPING Malta: purpose, evidence and method", name: "SHaiPING Malta", domain: "enquire.shaipingmalta.eu", x: 51, y: 70.5, desc: "SHaiPING Malta’s purpose, evidence and method.",
-      sources: ["SHaiPING Malta purpose", "Evidence and method", "People Future Readiness Index (to follow)"] },
+      sources: ["shaipingmalta.eu", "SHaiPING Malta purpose", "Evidence and method", "People Future Readiness Index (to follow)"] },
     { key: "leonardo", short: "The philosophy of the Nexus: human wisdom and AI", name: "Leonardo 2050", domain: "enquire.leonardo2050.com", x: 62.8, y: 47.6, desc: "The philosophy behind the Nexus: human wisdom and artificial intelligence, and why 2050.",
-      sources: ["Leonardo 2050", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
-    { key: "wellbeing", short: "Wellbeing in Malta through the WBGI (to follow)", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "Wellbeing in Malta through the published, approved WBGI snapshots. Connection to follow.",
-      sources: ["WBGI published snapshots (to follow)"] },
+      sources: ["leonardo2050.com", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
+    { key: "wellbeing", short: "How people in Malta and Gozo live, work, care and belong", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "How people in Malta and Gozo live, work, care and belong together, from ThinkPeople.You. The approved WBGI snapshots follow.",
+      sources: ["ThinkPeople.You", "WBGI snapshots (to follow)"] },
     { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "enquire.nexus", x: 91.6, y: 56, locked: true, desc: "The private rooms for members: analysis, deep research and working data. Sign-in required.",
       sources: ["Meridian analysis", "Dispatch PRO", "Malta Skills Workbench rooms", "WBGI observatory", "SHaiPING workspaces"] }
   ];
@@ -132,7 +132,7 @@
     if (isNaN(t) || !/^\d{4}-\d{2}/.test(s)) return s;
     return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Malta" }).format(new Date(t));
   }
-  var KIND = { news: "Reporting", filing: "Filing", figure: "Official figure", passage: "Governed passage", analysis: "Analysis" };
+  var KIND = { news: "Reporting", filing: "Filing", figure: "Official figure", passage: "Governed passage", page: "Published page", analysis: "Analysis" };
 
   function showLoading(q, e) {
     var r = $("result"); r.hidden = false; r.textContent = "";
