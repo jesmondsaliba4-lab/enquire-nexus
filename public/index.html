@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquire · Governed enquiry across the ThinkPeople Nexus</title>
+<meta name="description" content="Bring the question and follow it to its sources. Enquire answers from governed sources across the ThinkPeople Nexus, keeping source, reading and uncertainty apart.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:title" content="Enquire · enquire.nexus">
+<meta property="og:description" content="Governed enquiry across the ThinkPeople Nexus.">
+<meta property="og:image" content="https://enquire.nexus/assets/enquire-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=0.2.0">
+</head>
+<body>
+<a class="skip" href="#q">Skip to the enquiry box</a>
+
+<header class="top">
+  <a class="brand" href="/" aria-label="Enquire home">
+    <img src="/assets/emblem-160.png" alt="" width="56" height="56">
+    <span class="brand-words">
+      <span class="brand-name">Enquire</span>
+      <span class="brand-nexus"><i></i><span>NEXUS</span><i></i></span>
+    </span>
+  </a>
+  <nav aria-label="Main">
+    <a href="#how">How it answers</a>
+    <button type="button" class="signin" data-pick="rooms">Sign in</button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-label="Enquire">
+    <img class="hero-bg" src="/assets/hero.jpg" alt="Gold and blue paths across a dark network, converging on a lighthouse, with a person looking on from the edge" width="1672" height="941">
+    <button type="button" class="light" data-pick="all" aria-label="All of Enquire: ask across every edition"></button>
+    <div id="pins"></div>
+
+    <div class="copy">
+      <p class="eyebrow">Governed enquiry · ThinkPeople Nexus</p>
+      <h1>Bring the question. Follow it to its sources.</h1>
+      <p class="lede">Choose a path on the map, or ask across all of them. Every answer keeps its sources, its reading and its limits apart.</p>
+      <form id="ask" role="search" autocomplete="off">
+        <label for="q" class="sr">Your enquiry</label>
+        <input id="q" name="q" type="search" maxlength="300" placeholder="Ask across all of Enquire">
+        <button type="submit">Enquire</button>
+      </form>
+      <p class="searching">Searching <strong id="sel-name">All of Enquire</strong> · <span id="sel-domain">enquire.nexus</span></p>
+    </div>
+  </section>
+
+  <div class="chips" id="chips" role="group" aria-label="Choose a path"></div>
+
+  <section class="wrap path" aria-live="polite">
+    <div class="panel">
+      <div class="panel-main">
+        <p class="label gold">Your path</p>
+        <div class="path-title"><h2 id="path-name">All of Enquire</h2><span class="addr" id="path-domain">enquire.nexus</span></div>
+        <p class="path-desc" id="path-desc"></p>
+        <a href="#" class="cta" id="path-signin" hidden>Sign in to enter the rooms</a>
+      </div>
+      <div class="panel-side">
+        <p class="label">Sources on this path</p>
+        <ul class="pills" id="path-sources"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap result" id="result" aria-live="polite" hidden></section>
+
+  <section class="wrap how" id="how">
+    <div class="how-head">
+      <h2>How Enquire answers</h2>
+      <p>Three parts, always kept apart, so you can see where the evidence ends and the interpretation begins.</p>
+    </div>
+    <div class="how-grid">
+      <div><p class="roman">I · SOURCE</p><p>What the source actually says, linked to its document, publisher and date.</p></div>
+      <div><p class="roman">II · READING</p><p>Enquire’s interpretation, set apart from the source and citing it at every step.</p></div>
+      <div><p class="roman">III · UNCERTAINTY</p><p>What the sources leave open. When nothing matches, Enquire says so rather than inventing an answer.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="foot-brand"><img src="/assets/emblem-160.png" alt="" width="28" height="28"><span>Enquire</span> · a ThinkPeople Nexus service</span>
+  <span>Human judgement remains responsible for meaning and decisions.</span>
+</footer>
+
+<script src="/app.js?v=0.2.0" defer></script>
+</body>
+</html>

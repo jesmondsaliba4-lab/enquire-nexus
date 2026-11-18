@@ -1,49 +1,130 @@
-// Enquire · enquire.nexus
-// First deploy: a holding page and a health check. The engine (search index,
-// approved sources, answers, members' rooms) is added in the following releases.
+// Enquire · enquire.nexus — the gateway Worker.
+//   GET /api/enquire?q=…&edition=…   one governed answer, with its numbered sources
+//   GET /api/editions                 the editions and what each reads
+//   GET /health                       service status
+// Everything else is the static site in /public.
 
-const PAGE = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enquire · enquire.nexus</title>
-<meta name="robots" content="noindex">
-<style>
-  html,body{margin:0;height:100%;background:#0a1226;color:#efe7d4;font-family:Georgia,'EB Garamond',serif}
-  main{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
-  h1{margin:0;font-weight:500;font-size:44px}
-  .nexus{display:flex;align-items:center;gap:10px;font:500 12px system-ui,sans-serif;letter-spacing:.42em}
-  .nexus i{display:block;width:28px;height:1px;background:#c89244}
-  p{margin:8px 0 0;font:400 16px/1.5 system-ui,sans-serif;color:rgba(239,231,212,.8);max-width:520px}
-</style>
-</head>
-<body>
-<main>
-  <h1>Enquire</h1>
-  <div class="nexus"><i></i>NEXUS<i></i></div>
-  <p>Governed enquiry across the ThinkPeople Nexus is being prepared.</p>
-</main>
-</body>
-</html>`;
+import { writeAnswer } from "./answer";
+import { EDITIONS, editionFor } from "./editions";
+import { ADAPTERS } from "./sources";
+import { searchTerms, clip } from "./text";
+import type { Doc, Env } from "./types";
+
+const VERSION = "0.2.0";
+const CACHE_SECONDS = 3 * 3600;
+const MAX_SOURCES = 14;
+const MAX_PER_SOURCE = 6;
 
 const SECURITY: Record<string, string> = {
   "x-content-type-options": "nosniff",
   "referrer-policy": "strict-origin-when-cross-origin",
-  "x-robots-tag": "noindex",
 };
 
+function json(body: unknown, status = 200, extra: Record<string, string> = {}): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", ...SECURITY, ...extra },
+  });
+}
+
+/** Pick the strongest documents, at most MAX_PER_SOURCE from any one source, MAX_SOURCES in all. */
+function select(docs: Doc[]): Doc[] {
+  const sorted = [...docs].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  const per: Record<string, number> = {};
+  const seenTitles = new Set<string>();
+  const out: Doc[] = [];
+  for (const d of sorted) {
+    const t = d.title.toLowerCase().slice(0, 70);
+    if (seenTitles.has(t)) continue;
+    if ((per[d.sourceId] = (per[d.sourceId] ?? 0) + 1) > MAX_PER_SOURCE) continue;
+    seenTitles.add(t);
+    out.push(d);
+    if (out.length >= MAX_SOURCES) break;
+  }
+  return out;
+}
+
+async function enquire(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  const url = new URL(request.url);
+  const q = (url.searchParams.get("q") || "").replace(/\s+/g, " ").trim().slice(0, 300);
+  const edition = editionFor(url.hostname, url.searchParams.get("edition"));
+  const base = { q, edition: { key: edition.key, name: edition.name, domain: edition.domain }, version: VERSION };
+
+  if (q.length < 3) return json({ ...base, error: "Please type a question." }, 400);
+  if (edition.members) return json({ ...base, error: edition.notYet, signIn: true }, 401);
+  if (edition.notYet) return json({ ...base, nothing_found: true, summary: edition.notYet, points: [], uncertainty: "", sources: [] });
+
+  // served from cache when the same question was asked of the same edition recently
+  const cacheKey = new Request(`https://enquire-cache.internal/v2?e=${edition.key}&q=${encodeURIComponent(q.toLowerCase())}`);
+  const cache = caches.default;
+  const hit = await cache.match(cacheKey);
+  if (hit) {
+    const body = (await hit.json()) as Record<string, unknown>;
+    return json({ ...body, cached: true });
+  }
+
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  if (env.ENQUIRE_LIMIT) {
+    const { success } = await env.ENQUIRE_LIMIT.limit({ key: ip });
+    if (!success) return json({ ...base, error: "You have asked a lot of questions in a short time. Please wait a minute and try again." }, 429);
+  }
+
+  const terms = searchTerms(q);
+  if (!terms.length) return json({ ...base, error: "Please ask a little more specifically." }, 400);
+
+  const found = await Promise.all(
+    edition.sources.map((id) => ADAPTERS[id]?.search(env, q, terms, edition.key).catch(() => [] as Doc[]) ?? Promise.resolve([]))
+  );
+  const docs = select(found.flat());
+  const sources = docs.map((d, i) => ({
+    n: i + 1, title: d.title, via: d.via, date: d.date, url: d.url, kind: d.kind,
+    ...(d.status ? { status: d.status } : {}),
+    excerpt: clip(d.text, d.kind === "passage" ? 420 : 260),
+  }));
+  const at = new Date().toISOString();
+
+  if (!docs.length) {
+    return json({
+      ...base, at, nothing_found: true, points: [], uncertainty: "", sources: [],
+      summary: `Enquire found nothing on this in the ${edition.name} sources. Try other words, or choose a broader path.`,
+    });
+  }
+  if (!env.ANTHROPIC_API_KEY) {
+    return json({ ...base, at, error: "Answers are not switched on yet. Here are the sources Enquire found.", sources }, 503);
+  }
+
+  try {
+    const answer = await writeAnswer(env, q, edition.name, docs);
+    const body = { ...base, at, ...answer, sources };
+    ctx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(body), {
+      headers: { "content-type": "application/json", "cache-control": `public, max-age=${CACHE_SECONDS}` },
+    })));
+    return json(body);
+  } catch {
+    return json({ ...base, at, error: "Enquire could not write an answer just now. The sources it found are below; please try again in a minute.", sources }, 502);
+  }
+}
+
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/health") {
-      return Response.json({ service: "enquire-nexus", stage: "holding", ok: true }, { headers: { "cache-control": "no-store", ...SECURITY } });
+      return json({
+        service: "enquire-nexus", version: VERSION, ok: true,
+        sources: { evidence: !!env.EVIDENCE_DB, corporate: !!env.CT_DB, answers: !!env.ANTHROPIC_API_KEY, limit: !!env.ENQUIRE_LIMIT },
+      });
     }
-    if (request.method !== "GET" && request.method !== "HEAD") {
-      return new Response("Method not allowed", { status: 405, headers: SECURITY });
+    if (url.pathname === "/api/editions") {
+      const list = Object.values(EDITIONS).map((e) => ({
+        key: e.key, name: e.name, domain: e.domain, members: !!e.members, available: !e.notYet,
+        sources: e.sources.map((id) => ADAPTERS[id]?.name).filter(Boolean),
+      }));
+      return json({ version: VERSION, editions: list }, 200, { "cache-control": "public, max-age=300" });
     }
-    return new Response(request.method === "HEAD" ? null : PAGE, {
-      headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=60", ...SECURITY },
-    });
+    if (url.pathname === "/api/enquire") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      return enquire(request, env, ctx);
+    }
+    return env.ASSETS.fetch(request);
   },
 };

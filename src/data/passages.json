@@ -1,0 +1,442 @@
+[
+ {
+  "id": "book-intelligence-judgement",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "Greater intelligence and human judgement",
+  "document": "The ThinkPeople Nexus: Philosophy in Practice",
+  "status": "Editorial working draft",
+  "date": "November 2026",
+  "url": "",
+  "sourceText": "Greater intelligence does not remove the need for human judgement. It makes the conditions for good judgement more important.",
+  "reading": "Intelligence expands what can be analysed and imagined; it does not settle what matters, who bears the consequence or which future should be chosen.",
+  "uncertainty": "This is a philosophical proposition in an editorial working draft, not a validated scientific finding.",
+  "concepts": [
+   "human judgement",
+   "responsibility",
+   "intelligence",
+   "consequence"
+  ],
+  "keywords": "ai artificial intelligence judgement wisdom responsibility decision consequence technology purpose human future"
+ },
+ {
+  "id": "book-nexus-field",
+  "scope": "relational",
+  "domain": "RELaiTIONAL",
+  "title": "The NEXUS as a relational field",
+  "document": "The ThinkPeople Nexus: Philosophy in Practice",
+  "status": "Editorial working draft",
+  "date": "November 2026",
+  "url": "",
+  "sourceText": "A nexus is the relational field in which people, evidence, experience, expertise, technology and responsibility can meet around a real challenge.",
+  "reading": "The NEXUS does not merge distinct forms of knowledge or authority. It creates a stewarded relationship in which they can contribute without one silently replacing another.",
+  "uncertainty": "The architecture is offered as a method for inquiry and practice; it is not a claim that every relationship will produce agreement or wisdom.",
+  "concepts": [
+   "NEXUS",
+   "relationship",
+   "distinct but connected",
+   "authority"
+  ],
+  "keywords": "nexus relational field relationship people evidence experience expertise technology responsibility boundary distinct connected architecture"
+ },
+ {
+  "id": "book-co-intelligence-wisdom",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "From Co-Intelligence to Co-Wisdom",
+  "document": "The ThinkPeople Nexus: Philosophy in Practice",
+  "status": "Editorial working draft",
+  "date": "November 2026",
+  "url": "",
+  "sourceText": "Co-Intelligence expands what we can know and do. Co-Wisdom guides what we choose to do with it.",
+  "reading": "Co-Intelligence describes collaboration among human capability, AI, evidence and expertise. Co-Wisdom names the movement from that shared intelligence towards considered, accountable human judgement.",
+  "uncertainty": "Co-Wisdom is a direction of travel, not a claim that wisdom has been achieved or can be automated.",
+  "concepts": [
+   "Co-Intelligence",
+   "Co-Wisdom",
+   "human authority",
+   "shared inquiry"
+  ],
+  "keywords": "co intelligence co-intelligence co wisdom co-wisdom collaboration ai evidence expertise human judgement accountable authority challenge recommendation"
+ },
+ {
+  "id": "book-practice-sequence",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "Understand, Converge, Enable and Steward",
+  "document": "The ThinkPeople Nexus: Philosophy in Practice",
+  "status": "Editorial working draft",
+  "date": "November 2026",
+  "url": "",
+  "sourceText": "Understand means staying with the challenge long enough to see its human context and assumptions. Converge brings the relevant people, evidence and expertise into shared inquiry. Enable strengthens the conditions for action. Steward protects people, purpose, integrity and outcomes.",
+  "reading": "The sequence gives inquiry an orientation while allowing new evidence or an absent voice to reopen understanding. It is cyclical rather than mechanical.",
+  "uncertainty": "The sequence is a developing practice architecture; its application depends on context and defined decision rights.",
+  "concepts": [
+   "Understand",
+   "Converge",
+   "Enable",
+   "Steward"
+  ],
+  "keywords": "method practice understand converge enable steward inquiry action learning context assumptions integrity outcomes sequence"
+ },
+ {
+  "id": "front-door-domains",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople",
+  "title": "Seven distinct but interconnected specialist domains",
+  "document": "ThinkPeople front door",
+  "status": "Live",
+  "date": "15 November 2026",
+  "url": "https://thinkpeople.io/",
+  "sourceText": "ThinkPeople connects seven distinct but interconnected specialist domains around a shared philosophy: thinking people first.",
+  "reading": "The front door provides common orientation while each domain retains its own purpose, method and destination.",
+  "uncertainty": "Connection through one public doorway does not create shared authority, evidence or governance across every domain.",
+  "concepts": [
+   "connected domains",
+   "thinking people first",
+   "Co-Intelligence",
+   "Co-Wisdom"
+  ],
+  "keywords": "thinkpeople seven domains connected separate specialist philosophy people first advisory skills intelligence wellbeing leadership technology"
+ },
+ {
+  "id": "nexus-domain-announcement",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "The connective structure is not a merger",
+  "document": "Seven specialist domains, one connective structure",
+  "status": "Official announcement",
+  "date": "11 November 2026",
+  "url": "https://www.thinkpeoplenexus.com/news/thinkpeople-nexus-seven-specialist-domains/",
+  "sourceText": "The domains are distinct in purpose and interconnected in practice. Each has its own role, audience and expression within a wider connective structure.",
+  "reading": "Coherence is created by relationship and shared principles, not by flattening every initiative into one organisational voice.",
+  "uncertainty": "The announcement defines the public architecture; it does not imply that every domain uses the same data or approval process.",
+  "concepts": [
+   "connective structure",
+   "distinct purpose",
+   "interconnected practice",
+   "identity"
+  ],
+  "keywords": "domains structure distinct interconnected practice audience expression architecture merger governance data identity"
+ },
+ {
+  "id": "nexus-human-centred-practice",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "Begin with the challenge, not the organisational chart",
+  "document": "ThinkPeople Nexus",
+  "status": "Live",
+  "date": "November 2026",
+  "url": "https://www.thinkpeoplenexus.com/about/",
+  "sourceText": "Complex challenges rarely sit neatly within one function. The work brings together the people, evidence, capabilities, expertise and technologies the challenge actually requires.",
+  "reading": "The Nexus practice treats connection as purposeful: relevant contributions meet around the challenge while their responsibilities remain identifiable.",
+  "uncertainty": "A multidisciplinary response still requires explicit scope, authority and accountability for each engagement.",
+  "concepts": [
+   "challenge-led practice",
+   "human-centred",
+   "capability",
+   "connection"
+  ],
+  "keywords": "challenge organisational chart multidisciplinary human centred practice people evidence capabilities expertise technologies connection"
+ },
+ {
+  "id": "challenge-navigation-service",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "Challenge Navigation begins before the solution",
+  "document": "Challenge Navigation",
+  "status": "Published service",
+  "date": "November 2026",
+  "url": "https://www.thinkpeoplenexus.com/advisory/challenge-navigation/",
+  "sourceText": "Understand the challenge. Find a route forward.",
+  "reading": "Challenge Navigation helps an organisation make sense of what is happening, what is connected and what deserves attention before committing to a solution.",
+  "uncertainty": "The route forward is shaped around the actual challenge; it is not a pre-set diagnosis or an automatic recommendation.",
+  "concepts": [
+   "challenge navigation",
+   "organisational context",
+   "clarity",
+   "route forward"
+  ],
+  "keywords": "challenge navigation organisation organizational context culture change readiness clarity route forward people evidence capability ai adoption"
+ },
+ {
+  "id": "nexus-responsible-intelligence",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "Responsible Intelligence keeps limits visible",
+  "document": "Responsible Intelligence",
+  "status": "Published service",
+  "date": "November 2026",
+  "url": "https://www.thinkpeoplenexus.com/advisory/responsible-intelligence/",
+  "sourceText": "A clearer perspective. A stronger decision.",
+  "reading": "Responsible Intelligence connects evidence, expertise and foresight to consequential decisions while keeping the limits of what is known visible.",
+  "uncertainty": "An orientation brief supports judgement; it does not transfer the decision or its accountability to the analyst or system.",
+  "concepts": [
+   "responsible intelligence",
+   "evidence",
+   "foresight",
+   "orientation"
+  ],
+  "keywords": "responsible intelligence evidence expertise foresight judgement orientation source provenance limits decision automated accountability organisation ai readiness culture"
+ },
+ {
+  "id": "humaine-stewardship-service",
+  "scope": "humaine",
+  "domain": "HUMaiNE",
+  "title": "HUMaiNE Stewardship in organisational practice",
+  "document": "HUMaiNE Stewardship",
+  "status": "Published service",
+  "date": "November 2026",
+  "url": "https://www.thinkpeoplenexus.com/advisory/humaine-stewardship/",
+  "sourceText": "More than adopting AI. Knowing how to govern it.",
+  "reading": "HUMaiNE Stewardship addresses the human and organisational conditions for responsible AI use—not only the choice of technology. Dignity, agency, challenge, capability and responsibility remain part of the design.",
+  "uncertainty": "The framework does not claim that a technology is risk-free or that organisational readiness removes the need for continuing review.",
+  "concepts": [
+   "HUMaiNE Stewardship",
+   "responsible adoption",
+   "agency",
+   "accountability"
+  ],
+  "keywords": "humaine stewardship ai adoption organisation responsible people purpose accountability dignity agency safeguards governance risk review readiness culture leadership workforce capability decision rights"
+ },
+ {
+  "id": "people-capability-service",
+  "scope": "thinkpeople-nexus",
+  "domain": "ThinkPeople Nexus",
+  "title": "People Capability recognises what the organisation holds",
+  "document": "People Capability",
+  "status": "Published service",
+  "date": "November 2026",
+  "url": "https://www.thinkpeoplenexus.com/advisory/people-capability/",
+  "sourceText": "Recognise what you hold. Prepare for what comes next.",
+  "reading": "People Capability connects skills, experience and potential with the roles, learning and working relationships the organisation needs.",
+  "uncertainty": "Capability work follows the people and organisational question at hand; it should not reduce people to job titles or begin from deficit alone.",
+  "concepts": [
+   "people capability",
+   "existing capability",
+   "role-connected learning",
+   "workforce architecture"
+  ],
+  "keywords": "people capability organisation workforce skills experience potential roles learning relationships leadership ai readiness culture change"
+ },
+ {
+  "id": "leonardo-horizon",
+  "scope": "leonardo2050",
+  "domain": "Leonardo 2050",
+  "title": "2050 is a horizon, not a prediction",
+  "document": "Why Leonardo, why 2050?",
+  "status": "Foundational",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/why-leonardo.html",
+  "sourceText": "2050 is held as a horizon for inquiry, not a prediction belonging to experts or systems.",
+  "reading": "A horizon lengthens responsibility. It allows institutions to examine the futures their present choices make more or less possible without claiming certainty about what will occur.",
+  "uncertainty": "The inquiry is exploratory and normative; it is not forecasting or scenario probability.",
+  "concepts": [
+   "2050 horizon",
+   "future inquiry",
+   "Renaissance",
+   "long-term responsibility"
+  ],
+  "keywords": "leonardo 2050 horizon future inquiry prediction forecast renaissance institution technology responsibility long term"
+ },
+ {
+  "id": "leonardo-co-wisdom",
+  "scope": "leonardo2050",
+  "domain": "Leonardo 2050",
+  "title": "Co-WISDOM as direction of travel",
+  "document": "Co-WISDOM",
+  "status": "Foundational",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/co-wisdom.html",
+  "sourceText": "The relational equation is not a mathematical claim. It is a discipline for holding human relationships, human wisdom and AI efficiency together.",
+  "reading": "The formulation resists treating efficiency as self-directing. The value of intelligence depends on the human relationships, purpose and judgement within which it is used.",
+  "uncertainty": "Co-WISDOM names an aspiration and discipline, not a measurable state automatically produced by collaboration.",
+  "concepts": [
+   "Co-WISDOM",
+   "relationship",
+   "human wisdom",
+   "AI efficiency"
+  ],
+  "keywords": "co wisdom co-wisdom equation relational relationship human wisdom ai efficiency discipline mathematical claim purpose"
+ },
+ {
+  "id": "leonardo-people-nexus",
+  "scope": "leonardo2050",
+  "domain": "Leonardo 2050",
+  "title": "The NEXUS is people, not a platform",
+  "document": "People / Us: The NEXUS",
+  "status": "Foundational",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/people-us.html",
+  "sourceText": "Technology participates in the NEXUS. It does not own it. Humans retain meaning, choice and accountability.",
+  "reading": "The distinction places AI within a wider humanly governed relation. Technical capability can support the field without becoming its moral or institutional authority.",
+  "uncertainty": "Human control must be made real through decision rights, review and the practical ability to challenge—not assumed from a statement of principle.",
+  "concepts": [
+   "human authority",
+   "NEXUS",
+   "technology",
+   "accountability"
+  ],
+  "keywords": "nexus people us platform technology participates owns human meaning choice accountability authority decision rights"
+ },
+ {
+  "id": "relational-proposition",
+  "scope": "relational",
+  "domain": "RELaiTIONAL",
+  "title": "The RELaiTIONAL",
+  "document": "Six philosophical arguments",
+  "status": "Developing proposition",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/arguments.html#relational",
+  "sourceText": "The RELaiTIONAL names the quality of relationship through which intellectual intimacy becomes possible. AI is present within the relation, but does not define it.",
+  "reading": "Connection can transmit information; relationship carries context, uncertainty, identity and the conditions under which correction can be offered without being reduced to conflict.",
+  "uncertainty": "The RELaiTIONAL is explicitly developing. It is not presented as scientifically validated, universal or complete.",
+  "concepts": [
+   "RELaiTIONAL",
+   "intellectual intimacy",
+   "uncertainty",
+   "correction"
+  ],
+  "keywords": "relational relation relationship intellectual intimacy ai uncertainty identity contradiction unfinished thought disagreement conflict correction developing proposition"
+ },
+ {
+  "id": "humaine-philosophical-distinction",
+  "scope": "humaine",
+  "domain": "HUMaiNE",
+  "title": "humAIne action and HUMaiNE experience",
+  "document": "Six philosophical arguments",
+  "status": "Foundational",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/arguments.html#humaine",
+  "sourceText": "humAIne names AI acting through stewardship. HUMaiNE names the human experience of being met with dignity, acceptance and truthful presence.",
+  "reading": "The distinction widens evaluation beyond output. Responsible technology is also examined through what its way of acting makes possible—or impossible—in the person receiving it.",
+  "uncertainty": "The language does not make technology a moral agent or human. Responsibility for design, deployment and consequence remains human.",
+  "concepts": [
+   "humAIne",
+   "HUMaiNE",
+   "dignity",
+   "human experience"
+  ],
+  "keywords": "humaine human experience ai action stewardship dignity acceptance truthful presence output moral agent agency voice"
+ },
+ {
+  "id": "leonardo-stewardship-method",
+  "scope": "leonardo2050",
+  "domain": "Leonardo 2050",
+  "title": "A method that is still becoming",
+  "document": "How the NEXUS is stewarded",
+  "status": "Still becoming",
+  "date": "November 2026",
+  "url": "https://www.leonardo2050.com/method.html",
+  "sourceText": "The method holds the person, the evidence, the relationship and the boundary before judgement is exercised.",
+  "reading": "Stewardship begins earlier than the decision. It establishes what is being held, what remains uncertain, who may decide and how correction can change the course.",
+  "uncertainty": "The public method is deliberately marked as still becoming and should not be represented as a certified or completed methodology.",
+  "concepts": [
+   "stewardship",
+   "method",
+   "boundary",
+   "correction"
+  ],
+  "keywords": "method steward stewardship person evidence relationship boundary judgement still becoming correction decision uncertainty"
+ },
+ {
+  "id": "space-between-us",
+  "scope": "relational",
+  "domain": "RELaiTIONAL",
+  "title": "The space between us",
+  "document": "Thinking from the NEXUS",
+  "status": "Published reflection",
+  "date": "25 October 2026",
+  "url": "https://www.leonardo2050.com/thinking/the-space-between-us.html",
+  "sourceText": "The relationship is not an empty channel between two intelligences. It carries dignity, trust, memory, vulnerability and the possibility of correction.",
+  "reading": "Relational quality is part of the infrastructure of understanding. When correction is unsafe, institutions can possess abundant information while losing the ability to learn truthfully.",
+  "uncertainty": "The essay develops a philosophical reading of relationship; it does not claim that trust alone resolves conflicting interests or unequal power.",
+  "concepts": [
+   "space between us",
+   "trust",
+   "correction",
+   "relational infrastructure"
+  ],
+  "keywords": "space between us relational relationship dignity trust memory vulnerability correction infrastructure information learn power safety"
+ },
+ {
+  "id": "shaiping-purpose",
+  "scope": "shaiping-malta",
+  "domain": "SHaiPING Malta",
+  "title": "Connect capability with credible pathways",
+  "document": "Purpose",
+  "status": "Live initiative",
+  "date": "10 November 2026",
+  "url": "https://shaipingmalta.eu/purpose.html",
+  "sourceText": "SHaiPING Malta connects evidence about future skill needs with existing human capability and credible pathways for participation and progress.",
+  "reading": "The application begins from capability rather than deficit. Evidence can orient a pathway, but it cannot decide what a person should become.",
+  "uncertainty": "The wider ThinkPeople Index application is developing. Public pages must not be presented as individual assessment results.",
+  "concepts": [
+   "skills pathways",
+   "existing capability",
+   "participation",
+   "progress"
+  ],
+  "keywords": "shaiping malta skills pathway capability participation progress future readiness human person development learning work"
+ },
+ {
+  "id": "shaiping-evidence-boundaries",
+  "scope": "shaiping-malta",
+  "domain": "SHaiPING Malta",
+  "title": "Place every number beside its gap",
+  "document": "Evidence and the Purpose Layer",
+  "status": "Public evidence · not an Index result",
+  "date": "10 November 2026",
+  "url": "https://shaipingmalta.eu/evidence.html",
+  "sourceText": "Each sourced number is placed beside its gap, bounded interpretation and next question.",
+  "reading": "An indicator becomes more useful when the denominator, counter-number, source limit and editorial interpretation stay visible. The evidence opens inquiry; it does not become a policy prescription by itself.",
+  "uncertainty": "The selected readings are not ThinkPeople Index results and do not represent endorsement by the source agencies.",
+  "concepts": [
+   "bounded evidence",
+   "source limits",
+   "counter-number",
+   "next question"
+  ],
+  "keywords": "shaiping evidence purpose layer source number denominator counter number gap bounded interpretation question indicator policy prescription index result"
+ },
+ {
+  "id": "shaiping-approach",
+  "scope": "shaiping-malta",
+  "domain": "SHaiPING Malta",
+  "title": "A developing Skills and Pathways approach",
+  "document": "Approach",
+  "status": "Developing",
+  "date": "10 November 2026",
+  "url": "https://shaipingmalta.eu/approach.html",
+  "sourceText": "The public approach links labour-market signals, existing capability and learning pathways while stating what the method will not do.",
+  "reading": "Method boundaries protect people from being reduced to a signal. A labour-market pattern may inform options, but it is not an automatic instruction or personal decision.",
+  "uncertainty": "The approach is described as developing and intended; it should not be represented as a finished national assessment system.",
+  "concepts": [
+   "skills intelligence",
+   "pathways",
+   "method boundaries",
+   "human choice"
+  ],
+  "keywords": "shaiping approach skills pathways labour market signals capability learning boundaries will not do automatic assessment decision choice"
+ },
+ {
+  "id": "shaiping-intelligence-backbone",
+  "scope": "shaiping-malta",
+  "domain": "SHaiPING Malta",
+  "title": "Skills Intelligence as an evidence backbone",
+  "document": "Skills Intelligence",
+  "status": "Being developed",
+  "date": "10 November 2026",
+  "url": "https://shaipingmalta.eu/skills-intelligence.html",
+  "sourceText": "The observatory and evidence backbone are being developed to connect signals about work and skills with questions that can guide human pathways.",
+  "reading": "The intended role of the evidence layer is orientation and inquiry. It should increase the quality of questions before it is used to shape action.",
+  "uncertainty": "The public statement does not authorise automated pathways, individual scoring or access to the protected workspace.",
+  "concepts": [
+   "observatory",
+   "skills intelligence",
+   "evidence backbone",
+   "protected boundary"
+  ],
+  "keywords": "shaiping skills intelligence observatory evidence backbone signals work human pathways public protected workspace scoring automated"
+ }
+]
