@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Release desk · Enquire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1d3d; --navy2:#12294f; --paper:#f4efe4; --ink:#1b2333; --muted:#5d6577; --gold:#c9a24a; --blue:#5cc8ec; --line:#d8d0bf; --ok:#2f7d4f; --no:#a23b3b; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin:0; font: 15px/1.5 Inter, system-ui, sans-serif; color: var(--ink); background: var(--paper); }
+  header { background: var(--navy); color: #fff; padding: 14px 24px; display:flex; align-items:center; gap:18px; flex-wrap: wrap; }
+  header h1 { font: 600 24px/1 "Cormorant Garamond", serif; margin:0; letter-spacing:.02em; }
+  header h1 small { display:block; font: 500 10px/1.6 Inter, sans-serif; letter-spacing:.35em; color: var(--gold); margin-top:4px; }
+  header .who { margin-left:auto; font-size:13px; opacity:.85; }
+  nav { display:flex; gap:4px; padding: 0 24px; background: var(--navy2); flex-wrap: wrap; }
+  nav button { background:none; border:0; color:#cfd8e8; padding: 11px 14px; font: 500 14px Inter, sans-serif; cursor:pointer; border-bottom: 3px solid transparent; }
+  nav button[aria-selected=true] { color:#fff; border-bottom-color: var(--blue); }
+  nav .n { display:inline-block; min-width: 20px; padding: 0 6px; margin-left:6px; border-radius: 10px; background: var(--gold); color: var(--navy); font-size: 12px; font-weight:600; }
+  nav .n.zero { background: #3a4c6e; color:#cfd8e8; }
+  main { max-width: 1100px; margin: 0 auto; padding: 22px 24px 60px; }
+  h2 { font: 600 22px "Cormorant Garamond", serif; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 18px; }
+  .bar { display:flex; gap:10px; align-items:center; margin: 0 0 14px; flex-wrap: wrap; }
+  .card { background:#fff; border:1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 0 0 10px; }
+  .card h3 { margin: 0 0 4px; font-size: 15px; }
+  .meta { color: var(--muted); font-size: 12.5px; }
+  .tag { display:inline-block; font-size:11px; font-weight:600; letter-spacing:.04em; text-transform: uppercase; padding: 1px 7px; border-radius: 4px; margin-right: 6px; }
+  .tag.add { background:#e2f1e7; color: var(--ok); } .tag.change { background:#fbf0d6; color:#8a6412; } .tag.remove { background:#f6e1e1; color: var(--no); }
+  .tag.draft { background:#fbf0d6; color:#8a6412; } .tag.released { background:#e2f1e7; color: var(--ok); } .tag.declined { background:#eee; color:#666; }
+  .tag.new { background:#dceefa; color:#1c5c80; } .tag.accepted { background:#e2f1e7; color: var(--ok); }
+  .diff { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; font-size: 13.5px; }
+  .diff div { background: #faf8f3; border:1px solid #eee5d3; border-radius: 6px; padding: 8px 10px; white-space: pre-wrap; max-height: 220px; overflow:auto; }
+  .diff b { display:block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing:.06em; margin-bottom: 4px; }
+  .group { margin: 18px 0 8px; font-weight: 600; color: var(--navy); }
+  .group a { color: inherit; }
+  button.act, a.act { font: 500 13px Inter, sans-serif; border-radius: 6px; padding: 6px 12px; cursor:pointer; border: 1px solid var(--navy); background: var(--navy); color:#fff; text-decoration:none; display:inline-block; }
+  button.act.ghost, a.act.ghost { background: #fff; color: var(--navy); }
+  button.act.no { background:#fff; color: var(--no); border-color: var(--no); }
+  button.act:disabled { opacity: .5; cursor: default; }
+  .row { display:flex; gap:8px; align-items:center; margin-top: 10px; flex-wrap: wrap; }
+  label { display:block; font-size: 12.5px; font-weight:600; color: var(--muted); margin: 10px 0 3px; }
+  input, select, textarea { width:100%; font: 14px Inter, sans-serif; padding: 8px 10px; border:1px solid var(--line); border-radius: 6px; background:#fff; color: var(--ink); }
+  textarea { min-height: 90px; resize: vertical; }
+  .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .empty { color: var(--muted); padding: 24px 0; }
+  .msg { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--navy); color:#fff; padding: 9px 16px; border-radius: 6px; font-size: 14px; }
+  table { width:100%; border-collapse: collapse; font-size: 13.5px; }
+  td, th { text-align:left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  @media (max-width: 720px) { .diff, .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Release desk<small>ENQUIRE · NEXUS</small></h1>
+  <span class="who" id="who"></span>
+</header>
+<nav role="tablist">
+  <button role="tab" data-tab="changes" aria-selected="true">Page changes<span class="n" id="n-changes">·</span></button>
+  <button role="tab" data-tab="passages">Governed passages<span class="n" id="n-drafts">·</span></button>
+  <button role="tab" data-tab="research">Research requests<span class="n" id="n-research">·</span></button>
+  <button role="tab" data-tab="subs">Subscriptions</button>
+  <button role="tab" data-tab="sites">Sites read</button>
+</nav>
+<main>
+  <section id="tab-changes">
+    <h2>Page changes waiting for release</h2>
+    <p class="lead">Enquire re-reads the ThinkPeople sites each day. Anything new, changed or removed waits here; Enquire keeps answering from the last released copy until you release it.</p>
+    <div class="bar"><button class="act" id="rel-all" disabled>Release all shown</button><button class="act no" id="dec-all" disabled>Decline all shown</button></div>
+    <div id="changes"></div>
+  </section>
+
+  <section id="tab-passages" hidden>
+    <h2>Governed passages</h2>
+    <p class="lead">Passages Enquire may quote as ThinkPeople's own reading. A passage is used only once it is released; editing a released passage takes it back to draft.</p>
+    <div class="bar"><button class="act" id="new-passage">New passage</button></div>
+    <form class="card" id="pform" hidden>
+      <input type="hidden" name="id">
+      <div class="grid2">
+        <div><label for="p-scope">Belongs to</label><select id="p-scope" name="scope"></select></div>
+        <div><label for="p-status">Status label</label><input id="p-status" name="status_label" placeholder="e.g. Approved canon"></div>
+        <div><label for="p-title">Title</label><input id="p-title" name="title" required></div>
+        <div><label for="p-doc">Document</label><input id="p-doc" name="document" placeholder="Where the passage comes from"></div>
+        <div><label for="p-date">Date</label><input id="p-date" name="date" placeholder="2026-11"></div>
+        <div><label for="p-url">Link (https)</label><input id="p-url" name="url" placeholder="https://"></div>
+      </div>
+      <label for="p-text">Source text</label><textarea id="p-text" name="source_text" required></textarea>
+      <label for="p-reading">ThinkPeople's reading</label><textarea id="p-reading" name="reading"></textarea>
+      <label for="p-unc">What remains uncertain</label><textarea id="p-unc" name="uncertainty" style="min-height:60px"></textarea>
+      <label for="p-kw">Keywords</label><input id="p-kw" name="keywords" placeholder="comma separated">
+      <div class="row"><button class="act" type="submit">Save as draft</button><button class="act ghost" type="button" id="p-cancel">Cancel</button></div>
+    </form>
+    <div id="passages"></div>
+  </section>
+
+  <section id="tab-research" hidden>
+    <h2>Further-research requests</h2>
+    <p class="lead">Sent from under an Enquire answer. Accepting or declining here records your decision; reply to the person by email.</p>
+    <div id="research"></div>
+  </section>
+
+  <section id="tab-subs" hidden>
+    <h2>Subscription requests</h2>
+    <p class="lead">Subscription requests are not stored by Enquire. A visitor's "Subscribe to a service" link opens an email to <strong>jes@thinkpeople.eu</strong>, so each request arrives in that inbox with the subject <em>"Enquire – subscription request"</em>.</p>
+    <div class="card"><a class="act ghost" href="mailto:jes@thinkpeople.eu?subject=Enquire%20%E2%80%93%20subscription%20request">Open the inbox address</a></div>
+  </section>
+
+  <section id="tab-sites" hidden>
+    <h2>Sites Enquire reads</h2>
+    <p class="lead">The last successful reading of each site's published pages.</p>
+    <div class="card"><table><thead><tr><th>Site</th><th>Last read</th><th>Pages</th><th>Sections</th><th>Status</th></tr></thead><tbody id="sites"></tbody></table></div>
+  </section>
+</main>
+<div class="msg" id="msg" hidden></div>
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const safeUrl = (u) => /^https:\/\//i.test(u || "") ? u : "";
+  const day = (s) => s ? new Date(s).toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+  let scopes = {}, passages = [];
+
+  async function call(path, body) {
+    const opt = body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json", "x-desk": "1" }, body: JSON.stringify(body) };
+    const r = await fetch("/desk-api/" + path, { credentials: "same-origin", ...opt });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "The desk could not complete that.");
+    return j;
+  }
+  function say(t) { const m = $("#msg"); m.textContent = t; m.hidden = false; clearTimeout(say.t); say.t = setTimeout(() => (m.hidden = true), 2600); }
+  function count(id, n) { const el = $(id); el.textContent = n; el.classList.toggle("zero", !n); }
+
+  async function summary() {
+    const s = await call("summary");
+    scopes = s.scopes || {};
+    $("#who").textContent = "Signed in as " + s.user;
+    count("#n-changes", s.changes); count("#n-drafts", s.drafts); count("#n-research", s.research);
+    $("#sites").innerHTML = (s.crawl || []).map((c) => `<tr><td>${esc(c.site)}</td><td>${esc(day(c.last_ok))}</td><td>${esc(c.pages)}</td><td>${esc(c.sections)}</td><td>${esc(c.status)}</td></tr>`).join("");
+    $("#p-scope").innerHTML = Object.entries(scopes).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join("");
+  }
+
+  // ---- page changes
+  let shownChanges = [];
+  async function loadChanges() {
+    const { changes } = await call("changes");
+    shownChanges = changes.map((c) => c.id);
+    $("#rel-all").disabled = $("#dec-all").disabled = !changes.length;
+    if (!changes.length) { $("#changes").innerHTML = `<p class="empty">Nothing waiting. Enquire is answering from the current published pages.</p>`; return; }
+    let last = "";
+    $("#changes").innerHTML = changes.map((c) => {
+      const head = c.url !== last ? `<div class="group"><a href="${esc(safeUrl(c.url))}" target="_blank" rel="noopener">${esc(c.title || c.url)}</a> <span class="meta">${esc(c.url)}</span></div>` : "";
+      last = c.url;
+      const before = c.change === "add" ? "" : `<div><b>Released copy</b>${esc(c.old_heading ? c.old_heading + "\n\n" : "")}${esc(c.old_body)}</div>`;
+      const after = c.change === "remove" ? `<div><b>Now</b><em>Removed from the page</em></div>` : `<div><b>Now on the page</b>${esc(c.heading ? c.heading + "\n\n" : "")}${esc(c.body)}</div>`;
+      return head + `<div class="card" data-id="${esc(c.id)}">
+        <span class="tag ${esc(c.change)}">${esc(c.change)}</span><span class="meta">${esc(c.heading || "Section")} · seen ${esc(day(c.detected_at))}</span>
+        <div class="diff">${before}${after}</div>
+        <div class="row"><button class="act" data-do="release">Release</button><button class="act no" data-do="decline">Decline</button></div></div>`;
+    }).join("");
+  }
+  async function decideChanges(ids, release) {
+    if (!ids.length) return;
+    const r = await call("changes/" + (release ? "release" : "decline"), { ids });
+    say(`${r.decided} ${release ? "released" : "declined"}.`);
+    await Promise.all([loadChanges(), summary()]);
+  }
+  $("#changes").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-do]"); if (!b) return;
+    b.disabled = true;
+    decideChanges([b.closest(".card").dataset.id], b.dataset.do === "release").catch((err) => { say(err.message); b.disabled = false; });
+  });
+  $("#rel-all").onclick = () => decideChanges(shownChanges, true).catch((e) => say(e.message));
+  $("#dec-all").onclick = () => { if (confirm(`Decline all ${shownChanges.length} changes shown?`)) decideChanges(shownChanges, false).catch((e) => say(e.message)); };
+
+  // ---- passages
+  async function loadPassages() {
+    ({ passages } = await call("passages"));
+    if (!passages.length) { $("#passages").innerHTML = `<p class="empty">No passages added on the desk yet. The curated thinkpeople.io set is always in use.</p>`; return; }
+    $("#passages").innerHTML = passages.map((p) => `<div class="card" data-id="${esc(p.id)}">
+      <span class="tag ${esc(p.state)}">${esc(p.state)}</span><span class="meta">${esc(p.domain)} · ${esc(p.document || "")} ${p.date ? "· " + esc(p.date) : ""}</span>
+      <h3>${esc(p.title)}</h3><div>${esc(p.source_text).slice(0, 600)}</div>
+      ${p.reading ? `<p class="meta"><strong>Reading:</strong> ${esc(p.reading)}</p>` : ""}
+      <div class="row">${p.state === "draft" ? `<button class="act" data-do="release">Release</button><button class="act no" data-do="decline">Decline</button>` : ""}<button class="act ghost" data-do="edit">Edit</button>
+      ${p.decided_by ? `<span class="meta">${esc(p.state)} ${esc(day(p.decided_at))}</span>` : ""}</div></div>`).join("");
+  }
+  function openForm(p = {}) {
+    const f = $("#pform"); f.reset(); f.hidden = false;
+    for (const el of f.elements) if (el.name && p[el.name] != null) el.value = p[el.name];
+    f.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  $("#new-passage").onclick = () => openForm();
+  $("#p-cancel").onclick = () => ($("#pform").hidden = true);
+  $("#pform").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    if (!data.id) delete data.id;
+    try {
+      const r = await call("passages", data);
+      $("#pform").hidden = true;
+      say(r.wasReleased ? "Saved. It is back in draft until you release it again." : "Saved as draft.");
+      await Promise.all([loadPassages(), summary()]);
+    } catch (err) { say(err.message); }
+  });
+  $("#passages").addEventListener("click", async (e) => {
+    const b = e.target.closest("button[data-do]"); if (!b) return;
+    const id = b.closest(".card").dataset.id;
+    if (b.dataset.do === "edit") return openForm(passages.find((p) => p.id === id));
+    b.disabled = true;
+    try { await call(`passages/${id}/${b.dataset.do}`, {}); say(b.dataset.do === "release" ? "Released: Enquire can now quote it." : "Declined."); await Promise.all([loadPassages(), summary()]); }
+    catch (err) { say(err.message); b.disabled = false; }
+  });
+
+  // ---- research requests
+  async function loadResearch() {
+    const { requests } = await call("research");
+    if (!requests.length) { $("#research").innerHTML = `<p class="empty">No requests yet.</p>`; return; }
+    $("#research").innerHTML = requests.map((r) => `<div class="card" data-id="${esc(r.id)}">
+      <span class="tag ${esc(r.status)}">${esc(r.status)}</span><span class="meta">${esc(day(r.created_at))} · ${esc(r.edition || "all")}</span>
+      <h3>${esc(r.name)}${r.organisation ? " · " + esc(r.organisation) : ""} — <a href="mailto:${esc(r.email)}?subject=${encodeURIComponent("Your Enquire research request")}">${esc(r.email)}</a></h3>
+      ${r.q ? `<p class="meta"><strong>Asked:</strong> ${esc(r.q)}</p>` : ""}<div>${esc(r.message)}</div>
+      <label>Note (for your records)</label><input data-note value="${esc(r.note || "")}">
+      <div class="row"><button class="act" data-do="accepted">Accept</button><button class="act no" data-do="declined">Decline</button>${r.status !== "new" ? `<button class="act ghost" data-do="new">Reopen</button>` : ""}</div></div>`).join("");
+  }
+  $("#research").addEventListener("click", async (e) => {
+    const b = e.target.closest("button[data-do]"); if (!b) return;
+    const card = b.closest(".card"); b.disabled = true;
+    try { await call("research/" + card.dataset.id, { status: b.dataset.do, note: $("[data-note]", card).value }); say("Recorded."); await Promise.all([loadResearch(), summary()]); }
+    catch (err) { say(err.message); b.disabled = false; }
+  });
+
+  // ---- tabs
+  const loaders = { changes: loadChanges, passages: loadPassages, research: loadResearch };
+  document.querySelector("nav").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-tab]"); if (!b) return;
+    document.querySelectorAll("nav button").forEach((x) => x.setAttribute("aria-selected", x === b));
+    document.querySelectorAll("main > section").forEach((s) => (s.hidden = s.id !== "tab-" + b.dataset.tab));
+    loaders[b.dataset.tab]?.().catch((err) => say(err.message));
+  });
+  summary().then(loadChanges).catch((err) => say(err.message));
+})();
+</script>
+</body>
+</html>

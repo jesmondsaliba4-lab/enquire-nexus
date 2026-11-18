@@ -20,15 +20,42 @@ const PASSAGE_SCOPES: Partial<Record<EditionKey, string[]>> = {
 };
 
 // ---------------------------------------------------------------- ThinkPeople passages
+// The curated set from thinkpeople.io, plus passages released on the release desk.
+const DOMAINS: Record<string, string> = {
+  "thinkpeople-nexus": "ThinkPeople Nexus", humaine: "HUMaiNE", relational: "RELaiTIONAL",
+  leonardo2050: "Leonardo 2050", "shaiping-malta": "SHaiPING Malta",
+};
+export const PASSAGE_SCOPE_NAMES = DOMAINS;
+let released: { at: number; list: Passage[] } = { at: 0, list: [] };
+
+async function releasedPassages(env: Env): Promise<Passage[]> {
+  if (!env.ENQUIRE_DB || Date.now() - released.at < 60_000) return released.list;
+  try {
+    const { results } = await env.ENQUIRE_DB.prepare(
+      `SELECT id, scope, domain, title, document, status_label, date, url, source_text, reading, uncertainty, keywords
+         FROM passages WHERE state = 'released'`).all<Record<string, string>>();
+    released = {
+      at: Date.now(),
+      list: results.map((r) => ({
+        id: `db-${r.id}`, scope: r.scope, domain: r.domain || DOMAINS[r.scope] || r.scope, title: r.title, document: r.document || "",
+        status: r.status_label || "Released passage", date: r.date || "", url: r.url || "", sourceText: r.source_text,
+        reading: r.reading || "", uncertainty: r.uncertainty || "", concepts: [], keywords: r.keywords || "",
+      })),
+    };
+  } catch { /* keep the last good list */ }
+  return released.list;
+}
+
 const passages: SourceAdapter = {
   id: "thinkpeople-passages",
   name: "ThinkPeople governed passages",
   visibility: "public",
-  async search(_env, q, terms, scope) {
+  async search(env, q, terms, scope) {
     const scopes = PASSAGE_SCOPES[scope] ?? [];
     if (!scopes.length) return [];
     const phrase = q.toLowerCase().trim();
-    return PASSAGES.filter((p) => scopes.includes(p.scope))
+    const all = [...PASSAGES, ...(await releasedPassages(env))];
+    return all.filter((p) => scopes.includes(p.scope))
       .map((p) => {
         const body = [p.sourceText, p.reading, p.document, p.concepts.join(" "), String(p.keywords || "")].join(" ");
         return { p, score: scoreDoc(p.title, body, terms, phrase) + 1 };

@@ -10,6 +10,10 @@ export interface Env {
   ANTHROPIC_API_KEY?: string;
   ANTHROPIC_WORKSPACE_ID?: string;
   CLAUDE_MODEL?: string;
+  DESK_HOST?: string;            // release.tpnintel.com
+  DESK_EMAIL?: string;           // the one account allowed on the release desk
+  ACCESS_TEAM_DOMAIN?: string;   // <team>.cloudflareaccess.com
+  ACCESS_AUD?: string;           // the Access application's audience tag
 }
 
 export interface RateLimit {

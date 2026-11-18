@@ -1,17 +1,21 @@
 // Enquire · enquire.nexus — the gateway Worker.
 //   GET /api/enquire?q=…&edition=…   one governed answer, with its numbered sources
 //   GET /api/editions                 the editions and what each reads
+//   POST /api/research                a request for further research (kept for the release desk)
 //   GET /health                       service status
+// On release.tpnintel.com the same Worker serves the release desk instead (src/desk.ts).
 // Everything else is the static site in /public.
 
 import { writeAnswer } from "./answer";
 import { EDITIONS, editionFor } from "./editions";
 import { ADAPTERS } from "./sources";
 import { crawlStatus, refreshStale } from "./pages";
+import { handleDesk } from "./desk";
+import { saveResearchRequest } from "./research";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.3.1";
+const VERSION = "0.4.0";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;
@@ -112,6 +116,8 @@ async function enquire(request: Request, env: Env, ctx: ExecutionContext): Promi
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    if (url.hostname === (env.DESK_HOST || "release.tpnintel.com")) return handleDesk(request, env);
+    if (url.pathname.startsWith("/desk-api/")) return json({ error: "not_found" }, 404);
     if (url.pathname === "/health") {
       return json({
         service: "enquire-nexus", version: VERSION, ok: true,
@@ -129,6 +135,13 @@ export default {
         sources: e.sources.map((id) => ADAPTERS[id]?.name).filter(Boolean),
       }));
       return json({ version: VERSION, editions: list }, 200, { "cache-control": "public, max-age=300" });
+    }
+    if (url.pathname === "/api/research") {
+      if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+      const origin = request.headers.get("origin");
+      if (origin && origin !== url.origin) return json({ error: "forbidden" }, 403);
+      const r = await saveResearchRequest(request, env);
+      return json(r.body, r.status);
     }
     if (url.pathname === "/api/enquire") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);

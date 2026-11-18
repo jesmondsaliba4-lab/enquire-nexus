@@ -31,6 +31,7 @@ export const SITES: Site[] = [
 ];
 
 const MAX_PAGES = 60;
+const ID_SCHEME = 2; // section ids follow headings (2); positional ids were 1
 const CHUNK = 1200;
 const STALE_MS = 24 * 3600 * 1000;
 const UA = "EnquireNexus/0.3 (+https://enquire.nexus; reads ThinkPeople's own public pages)";
@@ -100,8 +101,11 @@ async function getText(url: string): Promise<{ ok: boolean; html: string; type: 
 
 // ---------------------------------------------------------------- crawling one site
 
-export async function crawlSite(env: Env, site: Site): Promise<{ pages: number; sections: number }> {
-  const db = env.ENQUIRE_DB!;
+type Row = { id: string; site: string; url: string; editions: string; fetched_at: string; title: string; heading: string; body: string };
+
+const slug = (t: string) => t.toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "top";
+
+export async function crawlSite(_env: Env, site: Site): Promise<{ pages: number; rows: Row[] }> {
   const now = new Date().toISOString();
   const seeds = [site.origin + "/"];
   const sm = await getText(site.origin + "/sitemap.xml");
@@ -116,7 +120,7 @@ export async function crawlSite(env: Env, site: Site): Promise<{ pages: number; 
   const queue = [...new Set(seeds.map((s) => { try { const u = new URL(s); u.hash = ""; u.search = ""; return u.href; } catch { return ""; } }).filter(Boolean))];
   const seen = new Set<string>();
   const seenText = new Set<string>();
-  const rows: Array<[string, string, string, string, string, string, string, string]> = [];
+  const rows: Row[] = [];
   let pages = 0;
 
   while (queue.length && pages < MAX_PAGES) {
@@ -134,25 +138,65 @@ export async function crawlSite(env: Env, site: Site): Promise<{ pages: number; 
     if (!sections.length) continue;
     pages++;
     const editions = ["all", ...site.editions(path)].join(" ");
-    let i = 0;
-    for (const s of sections) {
+    const used: Record<string, number> = {};
+    for (const sec of sections) {
       // boilerplate repeated across pages (calls to action, footers) is kept once
-      const sig = `${s.heading}|${s.text.slice(0, 160)}`;
+      const sig = `${sec.heading}|${sec.text.slice(0, 160)}`;
       if (seenText.has(sig)) continue;
       seenText.add(sig);
-      for (const c of chunks(s.text)) {
-        rows.push([`${site.id}:${path}:${i++}`, site.id, url, editions, now, clip(title, 200), s.heading, c]);
-      }
+      // ids follow the heading, not the position, so moving a section is not a change
+      const h = slug(sec.heading);
+      const n = (used[h] = (used[h] ?? 0) + 1);
+      chunks(sec.text).forEach((c, k) => {
+        rows.push({ id: `${site.id}:${path}#${h}~${n}:${k}`, site: site.id, url, editions, fetched_at: now, title: clip(title, 200), heading: sec.heading, body: c });
+      });
     }
   }
+  return { pages, rows };
+}
 
-  // replace this site's pages in one batch
-  const stmts = [db.prepare("DELETE FROM pages WHERE site = ?").bind(site.id)];
-  for (const r of rows) {
-    stmts.push(db.prepare("INSERT INTO pages (id, site, url, editions, fetched_at, title, heading, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").bind(...r));
-  }
+const insertPage = (db: D1Database, r: Row) =>
+  db.prepare("INSERT INTO pages (id, site, url, editions, fetched_at, title, heading, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(r.id, r.site, r.url, r.editions, r.fetched_at, r.title, r.heading, r.body);
+
+async function runBatches(db: D1Database, stmts: D1PreparedStatement[]) {
   for (let k = 0; k < stmts.length; k += 80) await db.batch(stmts.slice(k, k + 80));
-  return { pages, sections: rows.length };
+}
+
+/** First read of a site (or after the id scheme changed): the copy becomes the approved baseline. */
+async function writeBaseline(db: D1Database, siteId: string, rows: Row[]) {
+  await runBatches(db, [db.prepare("DELETE FROM pages WHERE site = ?").bind(siteId), ...rows.map((r) => insertPage(db, r))]);
+}
+
+/** Later reads: differences are held back as pending changes for the release desk. */
+async function queueChanges(db: D1Database, siteId: string, rows: Row[]): Promise<number> {
+  const live = await db.prepare("SELECT id, url, editions, title, heading, body FROM pages WHERE site = ?").bind(siteId).all<Row>();
+  const liveMap = new Map(live.results.map((r) => [r.id, r]));
+  const declined = await db.prepare("SELECT id, change, body FROM page_changes WHERE site = ? AND status = 'declined'").bind(siteId)
+    .all<{ id: string; change: string; body: string | null }>();
+  const wasDeclined = (id: string, change: string, body: string | null) =>
+    declined.results.some((d) => d.id === id && d.change === change && (d.body ?? "") === (body ?? ""));
+  const now = new Date().toISOString();
+  const pending: D1PreparedStatement[] = [];
+  const push = (r: Row, change: string, old?: Row) => {
+    const body = change === "remove" ? null : r.body;
+    if (wasDeclined(r.id, change, body)) return;
+    pending.push(db.prepare(
+      `INSERT OR REPLACE INTO page_changes (id, site, url, editions, title, heading, body, old_heading, old_body, change, detected_at, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`)
+      .bind(r.id, siteId, r.url, r.editions, r.title, change === "remove" ? r.heading : r.heading, body, old?.heading ?? null, old?.body ?? null, change, now));
+  };
+  const fresh = new Set<string>();
+  for (const r of rows) {
+    fresh.add(r.id);
+    const old = liveMap.get(r.id);
+    if (!old) push(r, "add");
+    else if (old.body !== r.body || old.heading !== r.heading) push(r, "change", old);
+  }
+  for (const [id, old] of liveMap) if (!fresh.has(id)) push(old, "remove", old);
+  // pending changes that no longer apply (the page went back to what is live) are dropped
+  await runBatches(db, [db.prepare("DELETE FROM page_changes WHERE site = ? AND status = 'pending'").bind(siteId), ...pending]);
+  return pending.length;
 }
 
 /** Crawl one site with a lock so two requests never crawl the same site at once. */
@@ -169,9 +213,20 @@ export async function refreshSite(env: Env, site: Site): Promise<void> {
     .run();
   if (!got.meta.changes) return; // someone else holds the lock
   try {
-    const r = await crawlSite(env, site);
-    await db.prepare("UPDATE crawl_state SET last_ok = ?2, pages = ?3, sections = ?4, status = 'ok', lock_until = NULL WHERE site = ?1")
-      .bind(site.id, new Date().toISOString(), r.pages, r.sections).run();
+    const { pages, rows } = await crawlSite(env, site);
+    if (!rows.length) throw new Error("nothing read");
+    const st = await db.prepare("SELECT id_scheme FROM crawl_state WHERE site = ?").bind(site.id).first<{ id_scheme: number }>();
+    const baseline = !st || (st.id_scheme ?? 1) < ID_SCHEME;
+    let status = "ok";
+    if (baseline) {
+      await writeBaseline(db, site.id, rows);
+      status = "ok · baseline";
+    } else {
+      const n = await queueChanges(db, site.id, rows);
+      status = n ? `ok · ${n} change${n === 1 ? "" : "s"} waiting for release` : "ok";
+    }
+    await db.prepare("UPDATE crawl_state SET last_ok = ?2, pages = ?3, sections = ?4, status = ?5, lock_until = NULL, id_scheme = ?6 WHERE site = ?1")
+      .bind(site.id, new Date().toISOString(), pages, rows.length, status, ID_SCHEME).run();
   } catch (e) {
     await db.prepare("UPDATE crawl_state SET status = ?2, lock_until = NULL WHERE site = ?1")
       .bind(site.id, `error: ${String(e).slice(0, 200)}`).run();
@@ -237,3 +292,26 @@ export const sitePages: SourceAdapter = {
     }
   },
 };
+
+// ---------------------------------------------------------------- release desk actions
+
+export async function decidePageChanges(env: Env, ids: string[], release: boolean, by: string): Promise<number> {
+  const db = env.ENQUIRE_DB!;
+  const now = new Date().toISOString();
+  let done = 0;
+  for (const id of ids.slice(0, 500)) {
+    const c = await db.prepare("SELECT * FROM page_changes WHERE id = ? AND status = 'pending'").bind(id).first<Record<string, string>>();
+    if (!c) continue;
+    const stmts: D1PreparedStatement[] = [];
+    if (release) {
+      stmts.push(db.prepare("DELETE FROM pages WHERE id = ?").bind(id));
+      if (c.change !== "remove") {
+        stmts.push(insertPage(db, { id, site: c.site, url: c.url, editions: c.editions, fetched_at: c.detected_at, title: c.title, heading: c.heading, body: c.body }));
+      }
+    }
+    stmts.push(db.prepare("UPDATE page_changes SET status = ?2, decided_at = ?3, decided_by = ?4 WHERE id = ?1").bind(id, release ? "released" : "declined", now, by));
+    await db.batch(stmts);
+    done++;
+  }
+  return done;
+}

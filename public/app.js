@@ -19,8 +19,8 @@
       sources: ["leonardo2050.com", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
     { key: "wellbeing", short: "How people in Malta and Gozo live, work, care and belong", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "How people in Malta and Gozo live, work, care and belong together: the current approved WBGI release, with ThinkPeople.You.",
       sources: ["Approved WBGI release", "ThinkPeople.You"] },
-    { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "enquire.nexus", x: 91.6, y: 56, locked: true, desc: "The private rooms for members: analysis, deep research and working data. Sign-in required.",
-      sources: ["Meridian analysis", "Dispatch PRO", "Malta Skills Workbench rooms", "WBGI observatory", "SHaiPING workspaces"] }
+    { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "release.tpnintel.com", x: 91.6, y: 56, locked: true, desc: "Two ways in. The release desk, where ThinkPeople approves what Enquire may use before it goes public. Or ask to subscribe to a ThinkPeople service by email.",
+      sources: ["Page changes awaiting release", "New governed passages", "Further-research requests", "Subscriptions, by email"] }
   ];
 
   var HOSTS = { "enquire.news": "news", "enquire.observer": "observer", "enquire.thinkpeople.io": "thinkpeople",
@@ -119,7 +119,7 @@
     $("path-name").textContent = e.name;
     $("path-domain").textContent = e.domain;
     $("path-desc").textContent = e.desc;
-    $("path-signin").hidden = !e.locked;
+    $("path-members").hidden = !e.locked;
     var ul = $("path-sources"); ul.textContent = "";
     e.sources.forEach(function (s) { ul.appendChild(el("li", { text: s })); });
   }
@@ -196,6 +196,47 @@
     }
     r.appendChild(grid);
     r.appendChild(el("p", { "class": "again", text: (d.cached ? "Answered from a recent enquiry. " : "") + "Enquire reads only the sources listed. Human judgement remains responsible for meaning and decisions." }));
+    r.appendChild(researchForm(d.q, d.edition ? d.edition.key : e.key));
+  }
+
+  // ---- "Request further research": kept for ThinkPeople's release desk, never sent anywhere else
+  function field(label, attrs, tag) {
+    var input = el(tag || "input", attrs);
+    return el("label", { "class": "rf-field" }, [el("span", { text: label }), input]);
+  }
+  function researchForm(q, edition) {
+    var box = el("details", { "class": "research" });
+    box.appendChild(el("summary", { text: "Need more than this? Request further research" }));
+    var f = el("form", { novalidate: "" });
+    f.appendChild(el("p", { "class": "rf-lead", text: "Tell ThinkPeople Nexus what you need. We reply by email; your request is kept only so we can answer it." }));
+    f.appendChild(field("What should we look into?", { name: "message", required: "", maxlength: "2000", rows: "4" }, "textarea"));
+    var row = el("div", { "class": "rf-row" });
+    row.appendChild(field("Your name", { name: "name", required: "", maxlength: "120", autocomplete: "name" }));
+    row.appendChild(field("Email", { name: "email", type: "email", required: "", maxlength: "254", autocomplete: "email" }));
+    row.appendChild(field("Organisation (optional)", { name: "organisation", maxlength: "160", autocomplete: "organization" }));
+    f.appendChild(row);
+    var hp = el("input", { name: "website", tabindex: "-1", autocomplete: "off", "aria-hidden": "true", "class": "hp" });
+    f.appendChild(hp);
+    var consent = el("input", { type: "checkbox", name: "consent" });
+    f.appendChild(el("label", { "class": "rf-consent" }, [consent, el("span", { text: "ThinkPeople Nexus may keep this request and reply to me about it." })]));
+    var btn = el("button", { type: "submit", "class": "cta", text: "Send request" });
+    var note = el("p", { "class": "rf-note", "aria-live": "polite" });
+    f.appendChild(el("div", { "class": "rf-actions" }, [btn, note]));
+    f.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var data = { q: q, edition: edition, consent: consent.checked };
+      ["message", "name", "email", "organisation", "website"].forEach(function (k) { data[k] = f.elements[k].value.trim(); });
+      btn.disabled = true; note.textContent = "Sending…";
+      fetch("/api/research", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) })
+        .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
+        .then(function (r) {
+          if (!r.ok) { note.textContent = r.j.error || "That did not go through. Please try again."; btn.disabled = false; return; }
+          f.textContent = ""; f.appendChild(el("p", { "class": "rf-done", text: "Thank you. Your request has reached ThinkPeople Nexus; we will reply by email." }));
+        })
+        .catch(function () { note.textContent = "That did not go through. Please check your connection."; btn.disabled = false; });
+    });
+    box.appendChild(f);
+    return box;
   }
 
   function ask(q) {
@@ -219,6 +260,7 @@
   if (!hostEdition && askedEdition && byKey[askedEdition]) state.sel = askedEdition;
   render();
   $("ask").addEventListener("submit", function (ev) { ev.preventDefault(); ask($("q").value); });
-  $("path-signin").addEventListener("click", function (ev) { ev.preventDefault(); showAnswer({ q: "Members’ rooms", error: "Sign-in for the members’ rooms is being set up. It will use the same ThinkPeople sign-in as tpnintel." }, byKey.rooms); });
+  $("subscribe").href = "mailto:jes@thinkpeople.eu?subject=" + encodeURIComponent("Enquire – subscription request") +
+    "&body=" + encodeURIComponent("Hello ThinkPeople,\n\nI would like to subscribe to:\n\nName:\nOrganisation:\nWhat I need:\n\nSent from enquire.nexus");
   if (params.get("q")) { $("q").value = params.get("q"); ask(params.get("q")); }
 })();

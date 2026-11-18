@@ -6,12 +6,13 @@
   "compatibility_date": "2026-11-01",
   "observability": { "enabled": true },
 
-  // The site: everything in /public, with the engine answering /api/* and /health first.
+  // The site: everything in /public. The Worker sees every request first, so that
+  // release.tpnintel.com gets the release desk and never the public site's files.
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/health"]
+    "run_worker_first": true
   },
 
   // Approved sources that live in this account. Both databases are EU-jurisdiction.
@@ -33,6 +34,14 @@
     { "name": "ENQUIRE_LIMIT", "namespace_id": "4410", "simple": { "limit": 12, "period": 60 } }
   ],
 
-  "vars": { "CLAUDE_MODEL": "claude-sonnet-5-5" }
+  "vars": {
+    "CLAUDE_MODEL": "claude-sonnet-5-5",
+    // The release desk: only this account, signed in through Cloudflare Access, may use it.
+    // Until ACCESS_TEAM_DOMAIN and ACCESS_AUD are filled in, the desk refuses everyone.
+    "DESK_HOST": "release.tpnintel.com",
+    "DESK_EMAIL": "jes@thinkpeople.eu",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  }
   // Secret, set in the Cloudflare dashboard: ANTHROPIC_API_KEY
 }
