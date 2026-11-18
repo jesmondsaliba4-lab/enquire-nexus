@@ -120,6 +120,7 @@
     $("path-domain").textContent = e.domain;
     $("path-desc").textContent = e.desc;
     $("path-members").hidden = !e.locked;
+    if (hostEdition) document.title = "Enquire · " + byKey[hostEdition].name;
     var ul = $("path-sources"); ul.textContent = "";
     e.sources.forEach(function (s) { ul.appendChild(el("li", { text: s })); });
   }
