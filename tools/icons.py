@@ -5,6 +5,11 @@ def bloom():
     petal = "M12 12c-2.3-1.9-2.3-5.6 0-7.5 2.3 1.9 2.3 5.6 0 7.5z"
     return "".join(f'<path d="{petal}" transform="rotate({a} 12 12)"/>' for a in (0, 72, 144, 216, 288)) + '<circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>'
 
+def maltese_cross():
+    # four arms, each meeting at the centre and opening to two points with a V notch
+    arm = "M12 12 L7.4 2.6 L12 5.6 L16.6 2.6 Z"
+    return "".join(f'<path d="{arm}" transform="rotate({a} 12 12)"/>' for a in (0, 90, 180, 270))
+
 ICONS = {
     "all": ("All of Enquire", "enquire.nexus",
             '<path d="M10.6 11l-.9 9h4.6l-.9-9"/><path d="M8 20h8"/><rect x="10.2" y="7.6" width="3.6" height="3.4" rx=".7"/>'
@@ -18,9 +23,7 @@ ICONS = {
     "thinkpeople": ("ThinkPeople Nexus", "enquire.thinkpeople.io",
                     '<path d="M4.2 4.6Q9.4 6.6 10.9 10.8M19.8 4.6Q14.6 6.6 13.1 10.8M4.2 19.4Q9.4 17.4 10.9 13.2M19.8 19.4Q14.6 17.4 13.1 13.2"/>'
                     '<circle cx="12" cy="12" r="1.4"/>'),
-    "shaiping": ("SHaiPING Malta", "enquire.shaipingmalta.eu",
-                 '<path d="M12 20v-7.2"/><path d="M12 12.8c0-3.7 2.6-5.9 6.6-5.9 0 3.7-2.6 5.9-6.6 5.9z"/>'
-                 '<path d="M12 15.2c0-3-2.2-4.7-5.6-4.7 0 3 2.2 4.7 5.6 4.7z"/><path d="M6.5 20h11"/>'),
+    "shaiping": ("SHaiPING Malta", "enquire.shaipingmalta.eu", maltese_cross()),
     "leonardo": ("Leonardo 2050", "enquire.leonardo2050.com",
                  '<circle cx="12" cy="11.6" r="8.4"/><circle cx="12" cy="6.5" r="1.1"/><path d="M12 7.6v5.4"/>'
                  '<path d="M5 9.7h14" stroke-width="1.3"/><path d="M5.9 6.9 12 9.1l6.1-2.2" stroke-width="1.3"/>'
