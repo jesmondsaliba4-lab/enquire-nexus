@@ -1,7 +1,7 @@
 // Enquire · enquire.nexus — the gateway Worker.
 //   GET /api/enquire?q=…&edition=…   one governed answer, with its numbered sources
 //   GET /api/editions                 the editions and what each reads
-//   POST /api/research                a request for further research (kept for the release desk)
+//   POST /api/research                a request for further research, from Enquire or a listed ThinkPeople site (kept for the release desk)
 //   GET /health                       service status
 // On release.tpnintel.com the same Worker serves the release desk instead (src/desk.ts).
 // Everything else is the static site in /public.
@@ -11,11 +11,11 @@ import { EDITIONS, editionFor } from "./editions";
 import { ADAPTERS } from "./sources";
 import { crawlStatus, refreshStale } from "./pages";
 import { handleDesk } from "./desk";
-import { saveResearchRequest } from "./research";
+import { REQUEST_SOURCES, saveResearchRequest } from "./research";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.4.3";
+const VERSION = "0.4.4";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;
@@ -137,11 +137,19 @@ export default {
       return json({ version: VERSION, editions: list }, 200, { "cache-control": "public, max-age=300" });
     }
     if (url.pathname === "/api/research") {
-      if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+      // Enquire's own pages, a listed ThinkPeople site's page (with CORS), or a server-to-server call (no Origin)
       const origin = request.headers.get("origin");
-      if (origin && origin !== url.origin) return json({ error: "forbidden" }, 403);
-      const r = await saveResearchRequest(request, env);
-      return json(r.body, r.status);
+      const site = origin ? REQUEST_SOURCES[origin] || null : null;
+      const cors: Record<string, string> = site
+        ? { "access-control-allow-origin": origin!, "access-control-allow-methods": "POST", "access-control-allow-headers": "content-type", "access-control-max-age": "86400", vary: "origin" }
+        : {};
+      if (request.method === "OPTIONS" && site) return new Response(null, { status: 204, headers: cors });
+      if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+      if (origin && origin !== url.origin && !site) return json({ error: "forbidden" }, 403);
+      const r = await saveResearchRequest(request, env, site);
+      const res = json(r.body, r.status);
+      for (const [k, v] of Object.entries(cors)) res.headers.set(k, v);
+      return res;
     }
     if (url.pathname === "/api/enquire") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);

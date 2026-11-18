@@ -98,7 +98,7 @@
 
   <section id="tab-research" hidden>
     <h2>Further-research requests</h2>
-    <p class="lead">Sent from under an Enquire answer. Accepting or declining here records your decision; reply to the person by email.</p>
+    <p class="lead">Sent from under an answer on Enquire or on a ThinkPeople site (labelled by site). Accepting or declining here records your decision; reply to the person by email.</p>
     <div id="research"></div>
   </section>
 
@@ -218,8 +218,8 @@
     const { requests } = await call("research");
     if (!requests.length) { $("#research").innerHTML = `<p class="empty">No requests yet.</p>`; return; }
     $("#research").innerHTML = requests.map((r) => `<div class="card" data-id="${esc(r.id)}">
-      <span class="tag ${esc(r.status)}">${esc(r.status)}</span><span class="meta">${esc(day(r.created_at))} · ${esc(r.edition || "all")}</span>
-      <h3>${esc(r.name)}${r.organisation ? " · " + esc(r.organisation) : ""} — <a href="mailto:${esc(r.email)}?subject=${encodeURIComponent("Your Enquire research request")}">${esc(r.email)}</a></h3>
+      <span class="tag ${esc(r.status)}">${esc(r.status)}</span><span class="meta">${esc(day(r.created_at))} · from <strong>${esc(r.source || "enquire.nexus")}</strong>${r.edition ? " · " + esc(r.edition) : ""}</span>
+      <h3>${esc(r.name || "(no name given)")}${r.organisation ? " · " + esc(r.organisation) : ""} — <a href="mailto:${esc(r.email)}?subject=${encodeURIComponent("Your Enquire research request")}">${esc(r.email)}</a></h3>
       ${r.q ? `<p class="meta"><strong>Asked:</strong> ${esc(r.q)}</p>` : ""}<div>${esc(r.message)}</div>
       <label>Note (for your records)</label><input data-note value="${esc(r.note || "")}">
       <div class="row"><button class="act" data-do="accepted">Accept</button><button class="act no" data-do="declined">Decline</button>${r.status !== "new" ? `<button class="act ghost" data-do="new">Reopen</button>` : ""}</div></div>`).join("");
