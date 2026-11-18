@@ -4,6 +4,7 @@ export interface Env {
   ASSETS: Fetcher;
   EVIDENCE_DB?: D1Database;      // tpn-evidence (EU): read-only by rule, SELECT only
   CT_DB?: D1Database;            // ct-corporate-sources (EU): read-only by rule, SELECT only
+  WBGI_DB?: D1Database;          // thinkpeople-wbgi-observatory (EU): only the current approved release is read
   ENQUIRE_DB?: D1Database;       // enquire-nexus (EU): Enquire's own copy of the published pages
   ENQUIRE_LIMIT?: RateLimit;     // per-visitor limit
   ANTHROPIC_API_KEY?: string;

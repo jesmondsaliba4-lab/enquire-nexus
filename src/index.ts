@@ -11,7 +11,7 @@ import { crawlStatus, refreshStale } from "./pages";
 import { searchTerms, clip } from "./text";
 import type { Doc, Env } from "./types";
 
-const VERSION = "0.3.0";
+const VERSION = "0.3.1";
 const CACHE_SECONDS = 3 * 3600;
 const MAX_SOURCES = 14;
 const MAX_PER_SOURCE = 6;
@@ -115,7 +115,7 @@ export default {
     if (url.pathname === "/health") {
       return json({
         service: "enquire-nexus", version: VERSION, ok: true,
-        sources: { evidence: !!env.EVIDENCE_DB, corporate: !!env.CT_DB, pages: !!env.ENQUIRE_DB, answers: !!env.ANTHROPIC_API_KEY, limit: !!env.ENQUIRE_LIMIT },
+        sources: { evidence: !!env.EVIDENCE_DB, corporate: !!env.CT_DB, pages: !!env.ENQUIRE_DB, wbgi: !!env.WBGI_DB, answers: !!env.ANTHROPIC_API_KEY, limit: !!env.ENQUIRE_LIMIT },
       });
     }
     if (url.pathname === "/api/pages") {

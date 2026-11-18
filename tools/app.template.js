@@ -17,8 +17,8 @@
       sources: ["shaipingmalta.eu", "SHaiPING Malta purpose", "Evidence and method", "People Future Readiness Index (to follow)"] },
     { key: "leonardo", short: "The philosophy of the Nexus: human wisdom and AI", name: "Leonardo 2050", domain: "enquire.leonardo2050.com", x: 62.8, y: 47.6, desc: "The philosophy behind the Nexus: human wisdom and artificial intelligence, and why 2050.",
       sources: ["leonardo2050.com", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
-    { key: "wellbeing", short: "How people in Malta and Gozo live, work, care and belong", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "How people in Malta and Gozo live, work, care and belong together, from ThinkPeople.You. The approved WBGI snapshots follow.",
-      sources: ["ThinkPeople.You", "WBGI snapshots (to follow)"] },
+    { key: "wellbeing", short: "How people in Malta and Gozo live, work, care and belong", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "How people in Malta and Gozo live, work, care and belong together: the current approved WBGI release, with ThinkPeople.You.",
+      sources: ["Approved WBGI release", "ThinkPeople.You"] },
     { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "enquire.nexus", x: 91.6, y: 56, locked: true, desc: "The private rooms for members: analysis, deep research and working data. Sign-in required.",
       sources: ["Meridian analysis", "Dispatch PRO", "Malta Skills Workbench rooms", "WBGI observatory", "SHaiPING workspaces"] }
   ];

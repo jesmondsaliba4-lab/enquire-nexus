@@ -26,6 +26,8 @@ Every answer keeps three things apart: what the **sources** say, Enquire's **rea
   - ThinkPeople published pages (`src/pages.ts`): the public pages of thinkpeoplenexus.com,
     thinkpeople.io, leonardo2050.com, shaipingmalta.eu, thinkpeople.you and maltaobserver.com,
     re-read daily into Enquire's own D1 `enquire-nexus` (EU) and searched with full-text search
+  - The WBGI wellbeing observatory (`src/wbgi.ts`, D1 `thinkpeople-wbgi-observatory`, EU): only the
+    current, human-approved release; nothing awaiting review is read
 - `src/answer.ts` — the answer, written by Claude from the numbered sources only.
 
 The VO / OCVO registers are never connected. The engine only reads (SELECT / GET).
@@ -38,6 +40,8 @@ The VO / OCVO registers are never connected. The engine only reads (SELECT / GET
 
 ## Releases
 
+- **0.3.1** — the Wellbeing edition reads the current approved WBGI release (figures with EU and
+  peer comparisons, release date), alongside ThinkPeople.You.
 - **0.3** — published pages of the ThinkPeople sites, read daily (cron 03:41 UTC) and on demand;
   the Wellbeing edition answers from ThinkPeople.You; `/api/pages` shows the crawl status.
 - **0.2** — the engine: five approved sources, governed answers, the landing page with the

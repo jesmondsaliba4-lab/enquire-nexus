@@ -270,9 +270,11 @@ const observer: SourceAdapter = {
 };
 
 import { sitePages } from "./pages";
+import { wbgi } from "./wbgi";
 
 export const ADAPTERS: Record<string, SourceAdapter> = {
   [sitePages.id]: sitePages,
+  [wbgi.id]: wbgi,
   [passages.id]: passages,
   [evidence.id]: evidence,
   [corporate.id]: corporate,

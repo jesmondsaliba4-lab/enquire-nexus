@@ -13,7 +13,7 @@ export interface Edition {
 
 export const EDITIONS: Record<EditionKey, Edition> = {
   all: { key: "all", name: "All of Enquire", domain: "enquire.nexus",
-    sources: ["thinkpeople-passages", "site-pages", "tpn-evidence", "cde-news", "corporate-times", "malta-observer"] },
+    sources: ["thinkpeople-passages", "site-pages", "tpn-evidence", "cde-news", "corporate-times", "malta-observer", "wbgi"] },
   news: { key: "news", name: "News", domain: "enquire.news",
     sources: ["tpn-evidence", "cde-news", "corporate-times"] },
   observer: { key: "observer", name: "Malta Observer", domain: "enquire.observer",
@@ -24,8 +24,8 @@ export const EDITIONS: Record<EditionKey, Edition> = {
     sources: ["thinkpeople-passages", "site-pages"] },
   leonardo: { key: "leonardo", name: "Leonardo 2050", domain: "enquire.leonardo2050.com",
     sources: ["thinkpeople-passages", "site-pages"] },
-  // reads thinkpeople.you's published pages now; the approved WBGI snapshots follow
-  wellbeing: { key: "wellbeing", name: "Wellbeing", domain: "enquire.thinkpeople.you", sources: ["site-pages"] },
+  // the current approved WBGI release, with ThinkPeople.You's published pages
+  wellbeing: { key: "wellbeing", name: "Wellbeing", domain: "enquire.thinkpeople.you", sources: ["wbgi", "site-pages"] },
   rooms: { key: "rooms", name: "Members’ rooms", domain: "enquire.nexus", sources: [], members: true,
     notYet: "The members’ rooms open after sign-in. Sign-in is not switched on yet." },
 };

@@ -19,6 +19,8 @@
   "d1_databases": [
     { "binding": "EVIDENCE_DB", "database_name": "tpn-evidence", "database_id": "1a66ea0c-1b3d-48a3-ba6a-3117908fe7bd" },
     { "binding": "CT_DB", "database_name": "ct-corporate-sources", "database_id": "4ee65a54-755e-4a4e-b1ae-a99052cce319" },
+    // The wellbeing observatory (EU): only the current approved release is read
+    { "binding": "WBGI_DB", "database_name": "thinkpeople-wbgi-observatory", "database_id": "374a8ed9-2b31-4fe1-bcea-a1b3b7cce684" },
     // Enquire's own database (EU): the daily copy of the ThinkPeople sites' published pages
     { "binding": "ENQUIRE_DB", "database_name": "enquire-nexus", "database_id": "6e88275f-5a54-45da-bd71-bed4698e1389" }
   ],
