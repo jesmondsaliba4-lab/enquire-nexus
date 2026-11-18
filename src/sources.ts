@@ -3,7 +3,7 @@
 
 import passagesData from "./data/passages.json";
 import type { Doc, EditionKey, Env, SourceAdapter } from "./types";
-import { clip, escapeLike, isHttps, recency, scoreDoc, stripHtml } from "./text";
+import { clip, escapeLike, isHttps, matchCountSql, recency, scoreDoc, stripHtml } from "./text";
 
 interface Passage {
   id: string; scope: string; domain: string; title: string; document: string; status: string; date: string;
@@ -71,10 +71,10 @@ const evidence: SourceAdapter = {
                     WHERE ic.item_id = i.item_id ORDER BY ic.first_seen_at LIMIT 1) AS publisher
              FROM items i
             WHERE i.date_status = 'dated' AND i.published_at >= ? AND (${like})${malta}
-            ORDER BY i.published_at DESC
+            ORDER BY (${matchCountSql("i.headline", terms.length)}) DESC, i.published_at DESC
             LIMIT 300`
         )
-        .bind(since, ...terms.map((t) => `%${escapeLike(t)}%`))
+        .bind(since, ...terms.map((t) => `%${escapeLike(t)}%`), ...terms.map((t) => `%${escapeLike(t)}%`))
         .all<Record<string, string | null>>();
       const seen = new Set<string>();
       const out: Doc[] = [];
@@ -112,6 +112,8 @@ const evidence: SourceAdapter = {
 };
 
 // ---------------------------------------------------------------- The Corporate Times desk
+const titleCase = (s: string) => s.replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+
 function ctVia(sourceId: string, company: string | null): string {
   if (sourceId.startsWith("mse-")) return "Malta Stock Exchange";
   if (sourceId.startsWith("company-ir:")) return `Investor relations · ${company || sourceId.slice(11)}`;
@@ -119,8 +121,10 @@ function ctVia(sourceId: string, company: string | null): string {
   if (sourceId === "ct-ci-cde") return "The Corporate Times";
   if (sourceId.startsWith("fiau")) return "FIAU";
   if (sourceId.startsWith("prospects")) return "Prospects MTF";
-  if (sourceId.startsWith("world-")) return sourceId.slice(6).replace(/-/g, " ");
-  return sourceId;
+  if (sourceId.startsWith("smechamber")) return "Malta Chamber of SMEs";
+  if (sourceId.startsWith("maltachamber") || sourceId.startsWith("malta-chamber")) return "The Malta Chamber";
+  if (sourceId.startsWith("world-")) return titleCase(sourceId.slice(6).replace(/-/g, " "));
+  return titleCase(sourceId.replace(/[-_:]+/g, " ").replace(/\bnews\b/i, "").trim());
 }
 
 const corporate: SourceAdapter = {
@@ -139,10 +143,10 @@ const corporate: SourceAdapter = {
              FROM items i
              LEFT JOIN item_text t ON t.source_id = i.source_id AND t.item_key = i.item_key
             WHERE i.status != 'rejected' AND (${like})
-            ORDER BY COALESCE(i.published, i.first_seen) DESC
+            ORDER BY (${matchCountSql("i.title", terms.length)}) DESC, COALESCE(i.published, i.first_seen) DESC
             LIMIT 200`
         )
-        .bind(...terms.map((t) => `%${escapeLike(t)}%`))
+        .bind(...terms.map((t) => `%${escapeLike(t)}%`), ...terms.map((t) => `%${escapeLike(t)}%`))
         .all<Record<string, string | null>>();
       return results
         .filter((r) => isHttps(r.url))

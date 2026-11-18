@@ -34,6 +34,12 @@ export function scoreDoc(title: string, body: string, terms: string[], phrase = 
   }
   if (!hits) return 0;
   score += hits * hits; // reward covering more of the question
+  // names that span two words ("malta chamber", "budget 2027") count extra when they appear together
+  for (let i = 0; i + 1 < terms.length; i++) {
+    const pair = `${terms[i]} ${terms[i + 1]}`;
+    if (t.includes(pair)) score += 5;
+    else if (b.includes(pair)) score += 2;
+  }
   if (phrase.length > 6 && (t.includes(phrase) || b.includes(phrase))) score += 8;
   return score;
 }
@@ -66,3 +72,8 @@ export const stripHtml = (s: string) =>
     .trim();
 
 export const isHttps = (u: unknown) => /^https:\/\/[^\s"'<>]+$/i.test(String(u || ""));
+
+/** SQL fragment ranking rows by how many of the terms a column contains (one bound parameter per term). */
+export function matchCountSql(column: string, n: number): string {
+  return Array.from({ length: n }, () => `(CASE WHEN ${column} LIKE ? ESCAPE '\\' THEN 1 ELSE 0 END)`).join(" + ");
+}
