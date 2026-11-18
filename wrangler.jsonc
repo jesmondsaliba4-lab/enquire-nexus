@@ -1,0 +1,8 @@
+{
+  // Enquire · enquire.nexus — the gateway Worker.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "enquire-nexus",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "observability": { "enabled": true }
+}
