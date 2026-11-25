@@ -1,4 +1,5 @@
-// The release desk (release.tpnintel.com): where Enquire's held-back material is released or declined.
+// The release desk (now publish.tpnintel.com/enquire/): where Enquire's held-back material is released or declined.
+// publish.tpnintel.com checks Cloudflare Access itself and passes the signed-in email over the service binding.
 // Two locks: Cloudflare Access in front of the hostname, and a check here of Access's signed token,
 // which must name the one allowed email address. Without both, the desk shows nothing.
 
@@ -155,9 +156,13 @@ async function api(request: Request, env: Env, user: string, path: string): Prom
   return j({ error: "not_found" }, 404);
 }
 
-export async function handleDesk(request: Request, env: Env): Promise<Response> {
+export async function handleDesk(request: Request, env: Env, viaPublish?: string | null): Promise<Response> {
   const url = new URL(request.url);
-  const user = await deskUser(request, env);
+  // through publish.tpnintel.com (binding only): that page has verified Access; the one allowed account still applies
+  const passed = (viaPublish || "").trim().toLowerCase();
+  const user = viaPublish !== undefined
+    ? (passed && passed === (env.DESK_EMAIL || "").toLowerCase() ? passed : null)
+    : await deskUser(request, env);
   if (!user) {
     return new Response("This desk is private. Sign in through ThinkPeople's Cloudflare Access with the approved account.", {
       status: 403, headers: { "content-type": "text/plain; charset=utf-8", ...HEADERS },

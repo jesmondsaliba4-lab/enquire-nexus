@@ -3,7 +3,8 @@
 //   GET /api/editions                 the editions and what each reads
 //   POST /api/research                a request for further research, from Enquire or a listed ThinkPeople site (kept for the release desk)
 //   GET /health                       service status
-// On release.tpnintel.com the same Worker serves the release desk instead (src/desk.ts).
+// The release desk (src/desk.ts) is served on publish.tpnintel.com/enquire/ through a service binding;
+// release.tpnintel.com forwards there.
 // Everything else is the static site in /public.
 
 import { writeAnswer } from "./answer";
@@ -114,10 +115,20 @@ async function enquire(request: Request, env: Env, ctx: ExecutionContext): Promi
   }
 }
 
+/** Reachable only through a service binding: no route or domain points at this name. */
+const INTERNAL_DESK_HOST = "enquire-desk.internal";
+export const PUBLISH_DESK_URL = "https://publish.tpnintel.com/enquire/";
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
-    if (url.hostname === (env.DESK_HOST || "release.tpnintel.com")) return handleDesk(request, env);
+    // The release desk now lives on publish.tpnintel.com/enquire/ (one approvals area, 25 Nov 2026). That page reaches
+    // this Worker only through its service binding, on this internal name, after its own Cloudflare Access check.
+    if (url.hostname === INTERNAL_DESK_HOST) return handleDesk(request, env, request.headers.get("x-desk-user"));
+    if (url.hostname === (env.DESK_HOST || "release.tpnintel.com")) {
+      if (request.method === "GET" && !url.pathname.startsWith("/desk-api/")) return Response.redirect(PUBLISH_DESK_URL, 302);
+      return handleDesk(request, env);
+    }
     if (url.pathname.startsWith("/desk-api/")) return json({ error: "not_found" }, 404);
     if (url.pathname === "/health") {
       return json({
