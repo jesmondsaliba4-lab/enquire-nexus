@@ -19,7 +19,7 @@
       sources: ["leonardo2050.com", "Co-WISDOM", "HUMaiNE", "RELaiTIONAL"] },
     { key: "wellbeing", short: "How people in Malta and Gozo live, work, care and belong", name: "Wellbeing", domain: "enquire.thinkpeople.you", x: 81.9, y: 47.5, desc: "How people in Malta and Gozo live, work, care and belong together: the current approved WBGI release, with ThinkPeople.You.",
       sources: ["Approved WBGI release", "ThinkPeople.You"] },
-    { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "release.tpnintel.com", x: 91.6, y: 56, locked: true, desc: "Two ways in. The release desk, where ThinkPeople approves what Enquire may use before it goes public. Or ask to subscribe to a ThinkPeople service by email.",
+    { key: "rooms", short: "Private rooms for members, after sign-in", name: "Members’ rooms", domain: "publish.tpnintel.com", x: 91.6, y: 56, locked: true, desc: "Two ways in. The release desk, where ThinkPeople approves what Enquire may use before it goes public. Or ask to subscribe to a ThinkPeople service by email.",
       sources: ["Page changes awaiting release", "New governed passages", "Further-research requests", "Subscriptions, by email"] }
   ];
 

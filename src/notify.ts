@@ -40,7 +40,7 @@ export async function notifyDesk(env: Env, r: SavedRequest): Promise<void> {
     `Received: ${r.created_at}`,
     "",
     "Reply to this email to answer the reader directly.",
-    "All requests: https://release.tpnintel.com/ (Research requests)",
+    "All requests: https://publish.tpnintel.com/enquire/ (Research requests)",
   ].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\r\n");
   const safeReply = /^[^\s@<>()",;]{1,64}@[^\s@<>()",;]{1,190}$/.test(r.email) ? r.email : "";
   const raw = [
