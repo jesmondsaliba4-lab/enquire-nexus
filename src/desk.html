@@ -143,10 +143,11 @@
   }
 
   // ---- page changes
-  let shownChanges = [];
+  let shownChanges = [], shownRemovals = [];
   async function loadChanges() {
     const { changes } = await call("changes");
     shownChanges = changes.map((c) => c.id);
+    shownRemovals = changes.filter((c) => c.change === "remove");
     $("#rel-all").disabled = $("#dec-all").disabled = !changes.length;
     if (!changes.length) { $("#changes").innerHTML = `<p class="empty">Nothing waiting. Enquire is answering from the current published pages.</p>`; return; }
     let last = "";
@@ -172,7 +173,16 @@
     b.disabled = true;
     decideChanges([b.closest(".card").dataset.id], b.dataset.do === "release").catch((err) => { say(err.message); b.disabled = false; });
   });
-  $("#rel-all").onclick = () => decideChanges(shownChanges, true).catch((e) => say(e.message));
+  // Releasing a removal takes that text out of what Enquire answers from (26 Nov 2026: a whole essay went this way
+  // in one "Release all"), so a batch with removals asks first and names the pages.
+  $("#rel-all").onclick = () => {
+    if (shownRemovals.length) {
+      const pages = [...new Set(shownRemovals.map((c) => c.title || c.url))];
+      const ok = confirm(`Release all ${shownChanges.length} changes shown?\n\n${shownRemovals.length} of them ${shownRemovals.length === 1 ? "is a removal" : "are removals"}: Enquire will stop answering from that text.\n\nPages with removals:\n- ${pages.slice(0, 12).join("\n- ")}${pages.length > 12 ? `\n- and ${pages.length - 12} more` : ""}\n\nTo keep a page, cancel and decline its removals one by one.`);
+      if (!ok) return;
+    }
+    decideChanges(shownChanges, true).catch((e) => say(e.message));
+  };
   $("#dec-all").onclick = () => { if (confirm(`Decline all ${shownChanges.length} changes shown?`)) decideChanges(shownChanges, false).catch((e) => say(e.message)); };
 
   // ---- passages
