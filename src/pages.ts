@@ -33,7 +33,8 @@ export const SITES: Site[] = [
 const MAX_PAGES = 60;
 const ID_SCHEME = 2; // section ids follow headings (2); positional ids were 1
 const CHUNK = 1200;
-const STALE_MS = 24 * 3600 * 1000;
+// 20 hours, not 24: the daily run at 03:41 finds yesterday's read (03:42) a minute short of 24 hours and skipped every site (26 Nov).
+const STALE_MS = 20 * 3600 * 1000;
 const UA = "EnquireNexus/0.3 (+https://enquire.nexus; reads ThinkPeople's own public pages)";
 
 // ---------------------------------------------------------------- reading a page
